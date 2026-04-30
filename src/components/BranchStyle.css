@@ -1,0 +1,267 @@
+/* =========================================================
+   BRANCH SWITCHER — add to topbar.css
+========================================================= */
+
+/* Wrapper */
+.tb_branch_wrap {
+  position: relative;
+}
+
+/* Trigger button */
+.tb_branch_btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: #f9fafb;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--main-color);
+  white-space: nowrap;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+  height: 36px;
+}
+
+.tb_branch_btn:hover {
+  background: #ddeeff;
+  border-color: #a8c8f0;
+}
+
+/* Green dot */
+.tb_branch_dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+.tb_branch_name {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tb_branch_arrow {
+  font-size: 12px;
+  color: #bbb;
+  transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.tb_branch_arrow.open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown panel */
+.tb_branch_dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 250px;
+  background: #fff;
+  border: 1px solid #e2ecf7;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 60, 120, 0.13);
+  z-index: 9999;
+  overflow: hidden;
+  animation: tb_dd_in 0.15s ease;
+}
+
+@keyframes tb_dd_in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dropdown header */
+.tb_branch_dropdown_header {
+  padding: 10px 14px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #212529bf;
+  border-bottom: 1px solid #eef3fb;
+  display: flex;
+  align-items: center;
+}
+
+/* Branch item */
+.tb_branch_item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.tb_branch_item:hover {
+  background: #f4f8ff;
+}
+
+.tb_branch_item--active {
+  background: #eef5ff;
+}
+
+/* Item icon */
+.tb_branch_item_icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 5px;
+  background: #ddeeff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--main-color);
+  font-size: 15px;
+}
+
+.tb_branch_item--active .tb_branch_item_icon {
+  background: var(--gradient-color);
+  color: #fff;
+}
+
+/* Item text */
+.tb_branch_item_info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tb_branch_item_name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a3c5e;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tb_branch_item_loc {
+  font-size: 11px;
+  color: #212529bf;
+}
+
+.tb_branch_item_check {
+  color: var(--main-color);
+  font-size: 13px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Dropdown footer */
+.tb_branch_dropdown_footer {
+  padding: 10px 14px 10px;
+  border-top: 1px solid #eef3fb;
+}
+
+.tb_branch_manage_link {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--main-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.tb_branch_manage_link:hover {
+  color: var(--main-color);
+}
+
+/* =========================================================
+   ACTIVE BRANCH BANNER — add to ProfileEdit.css
+========================================================= */
+.ps_active_branch_banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f9fafb;
+  padding: 14px 18px;
+}
+
+.ps_ab_left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ps_ab_icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--main-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.ps_ab_label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #212529bf;
+  margin-bottom: 2px;
+}
+
+.ps_ab_name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a3c5e;
+  line-height: 1.2;
+}
+
+.ps_ab_meta {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.ps_ab_badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #dcfce7;
+  color: #16a34a;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 12px;
+  border: 1px solid #bbf7d0;
+}
+
+.ps_ab_badge_dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+}

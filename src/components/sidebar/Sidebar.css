@@ -1,0 +1,388 @@
+/* =========================================================
+   LAYOUT
+========================================================= */
+.app_layout {
+  display: flex;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: var(--gradient-color);
+  transition: width 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 100;
+  /* NO overflow here — must be visible for flyout */
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+.sidebar_header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.header_logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+}
+
+.header_logo img {
+  max-width: 120px;
+  height: auto;
+  transition: all 0.3s ease;
+  filter: brightness(0) invert(1);
+}
+
+.sidebar.collapsed .header_logo img {
+  max-width: 30px;
+}
+
+/* =========================================================
+   COLLAPSE BUTTON
+========================================================= */
+.collapse_btn {
+  width: 35px;
+  height: 35px;
+  margin-right: 15px;
+  background: #efefef;
+  border: 1px solid #bbb;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+/* =========================================================
+   SCROLL WRAPPER TRICK
+   — outer div scrolls vertically
+   — inner ul is overflow visible so flyout escapes
+   
+   overflow-y + overflow-x visible cannot coexist on 1 element.
+   So we split: scroll on wrapper, visible on inner.
+========================================================= */
+.sidebar_menu_list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: visible; /* browser will force this to auto — see inner fix */
+  background: transparent;
+}
+
+.sidebar_menu_list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar_menu_list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 5px;
+}
+
+/* The ul itself must NOT clip — flyout lives here */
+.sidebar_menu_items {
+  padding: 10px 8px;
+  transition: all 0.3s ease;
+  background: transparent;
+  /* No overflow set — inherits visible from parent context */
+}
+
+/* =========================================================
+   MENU ITEM
+========================================================= */
+.sidebar_menu {
+  list-style: none;
+  margin-bottom: 4px;
+  position: relative; /* anchor for flyout + tooltip */
+  background: transparent;
+}
+
+/* =========================================================
+   MENU HEADER
+========================================================= */
+.menu_header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: #fff;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.menu_header:hover {
+  background: rgba(34, 119, 197, 0.25);
+}
+
+/* ICON */
+.sidebar_icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  flex-shrink: 0;
+}
+
+.sidebar_icon i {
+  color: #fff;
+  font-size: 18px;
+}
+
+/* TEXT */
+.sidebar_text {
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+  font-size: 15px;
+  flex: 1;
+  color: #fff;
+}
+
+/* ARROW */
+.arrow {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  color: #fff;
+}
+
+/* ACTIVE */
+.sidebar_menu.active > .menu_header {
+  background: rgba(34, 135, 197, 0.25);
+  border-left: 3px solid #005c89;
+}
+
+/* =========================================================
+   EXPANDED SUBMENU
+========================================================= */
+.submenu {
+  display: none;
+  margin-top: 4px;
+  padding-left: 8px;
+  background: transparent;
+}
+
+.submenu.submenu--open {
+  display: block;
+}
+
+.submenu li {
+  list-style: none;
+  padding: 10px 10px;
+  border-radius: 6px;
+  transition: background 0.2s;
+  margin-bottom: 2px;
+  background: transparent;
+}
+
+.submenu li:hover {
+  background: rgba(34, 135, 197, 0.25);
+}
+
+.submenu li.active {
+  background: rgba(34, 135, 197, 0.25);
+  border-left: 3px solid #005c89;
+}
+
+.submenu a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.submenu_icon {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+/* =========================================================
+   COLLAPSED — general
+========================================================= */
+.sidebar.collapsed .sidebar_text {
+  display: none;
+}
+
+.sidebar.collapsed .arrow {
+  display: none;
+}
+
+.sidebar.collapsed .menu_header {
+  justify-content: center;
+  padding: 10px 0;
+  gap: 0;
+}
+
+.sidebar.collapsed .sidebar_icon {
+  width: auto;
+}
+
+/* =========================================================
+   COLLAPSED — tooltip (only for items WITHOUT submenu)
+========================================================= */
+/* .sidebar.collapsed .sidebar_menu:not(:has(.submenu)) .menu_header::after {
+  content: attr(data-tooltip);
+  position: fixed;
+  left: 80px;
+  top: auto;
+
+  background: linear-gradient(135deg, #002f4a, #004b63);
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  z-index: 99999;
+}
+
+.sidebar.collapsed .sidebar_menu:not(:has(.submenu)) .menu_header::before {
+  content: "";
+  position: fixed;
+  left: 71px;
+  top: auto;
+
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent #002f4a transparent transparent;
+  pointer-events: none;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  z-index: 99999;
+}
+
+.sidebar.collapsed .sidebar_menu:not(:has(.submenu)):hover .menu_header::after,
+.sidebar.collapsed .sidebar_menu:not(:has(.submenu)):hover .menu_header::before {
+  opacity: 1;
+  visibility: visible;
+} */
+
+.custom_tooltip {
+  background: var(--main-color) !important;
+  color: #fff !important;
+  font-size: 13px !important;
+  padding: 2px 12px !important;
+  border-radius: 8px !important;
+  z-index: 9999;
+}
+
+/* =========================================================
+   COLLAPSED — flyout submenu
+   Uses opacity/visibility — NOT display:none
+   so it works regardless of submenu--open class
+========================================================= */
+.sidebar.collapsed .submenu,
+.sidebar.collapsed .submenu.submenu--open {
+  /* reset expanded styles */
+  display: block !important;
+  margin-top: 0;
+  padding-left: 0;
+  padding: 8px;
+
+  /* flyout positioning */
+  position: fixed; /* fixed so it escapes ANY overflow parent */
+  left: 50px;
+  top: auto;
+  margin-top: -40px;
+
+  background: var(--main-color);
+  min-width: 190px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+  /* hidden by default */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(6px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0.2s;
+
+  z-index: 99999;
+}
+
+/* show on hover */
+.sidebar.collapsed .sidebar_menu:hover > .submenu,
+.sidebar.collapsed .sidebar_menu:hover > .submenu.submenu--open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.sidebar.collapsed .submenu li {
+  padding: 9px 10px;
+  margin-bottom: 2px;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+.sidebar_footer {
+  padding: 10px;
+  flex-shrink: 0;
+  background: transparent;
+}
+
+.sidebar_footer .footer_item {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  box-sizing: border-box;
+}
+
+.sidebar.collapsed .sidebar_footer .footer_item {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.sidebar_footer .footer_item:hover {
+  background: rgba(34, 119, 197, 0.25);
+}

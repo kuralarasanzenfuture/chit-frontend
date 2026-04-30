@@ -1,0 +1,17 @@
+.ui-badge {
+  font-size: 11px;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+.ui-change {
+  background-color: #2a944612;
+  color: #2a9446;
+}
+.ui-update {
+  background-color: #f5881f12;
+  color: #f5881f;
+}
+.ui-delete {
+  background-color: #c8102f12;
+  color: #c8102f;
+}

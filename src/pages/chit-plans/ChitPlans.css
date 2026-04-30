@@ -1,0 +1,394 @@
+/* TOGGLE */
+.view_toggle {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 0px;
+  background: #efefef;
+  padding: 4px 5px;
+  border-radius: 5px;
+}
+
+.view_toggle button {
+  border: none !important;
+  background: transparent;
+  padding: 6px 15px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.view_toggle button i {
+  font-size: 14px;
+  margin-right: 3px;
+}
+.view_toggle button.active {
+  background: #fff;
+  color: var(--main-color);
+}
+
+.plan_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.plan_card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  transition: 0.3s;
+  position: relative;
+}
+
+.plan_card:hover {
+  transform: translateY(-4px);
+}
+
+.plan_header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.plan_header .icon {
+  width: 45px;
+  height: 45px;
+  background: #ecfdf5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.plan_card h5 {
+  font-size: 17px;
+  margin-bottom: 0px;
+}
+.plan_card small {
+  font-size: 13px;
+}
+.plan_header .status {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+.status {
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-weight: 400;
+}
+
+.status.active {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.status.draft {
+  background: #e5e7eb;
+  color: #374151;
+}
+.status.closed {
+  background: #fee2e2;
+  color: #dc2626;
+}
+.plan_value {
+  margin: 15px 0;
+}
+.plan_value span {
+  font-size: 13px;
+}
+.plan_value h3 {
+  font-size: 20px;
+  color: var(--main-color);
+  margin-top: 5px;
+}
+.plan_details {
+  display: flex;
+  justify-content: space-between;
+}
+.plan_details p {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+._btn {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9fafb;
+  text-align: center;
+  color: #000;
+}
+._btn.edit:hover {
+  background-color: #ffc107;
+  color: #fff;
+}
+._btn.delete:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.plan_table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.plan_table th {
+  text-align: left;
+  padding: 12px;
+  background: #f9fafb;
+  font-size: 13px;
+}
+
+.plan_table td {
+  padding: 12px;
+  border-top: 1px solid #eee;
+}
+
+.plan_name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+
+.action_btn {
+  background: #022c22;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+}
+
+.list_view {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* CARD */
+.list_card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  transition: 0.3s ease;
+}
+
+.list_card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* LEFT */
+.list_left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 250px;
+}
+
+.list_icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* TITLE */
+.list_left h5 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.list_left p {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* CENTER */
+.list_center {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+}
+
+.list_center div {
+  display: flex;
+  flex-direction: column;
+}
+
+.list_center span {
+  font-size: 12px;
+  color: #212529;
+  margin-bottom: 3px;
+}
+
+.list_center strong {
+  font-size: 14px;
+  color: #111827;
+  font-weight: 500;
+}
+
+/* RIGHT */
+.list_right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* BUTTON */
+.list_btn {
+  background: #0f172a;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.group_card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: 0.3s;
+}
+
+.group_card:hover {
+  transform: translateY(-5px);
+}
+
+.icon {
+  width: 45px;
+  height: 45px;
+  background: #ecfdf5;
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+/* STATUS COLORS */
+.badge.active {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.badge.pending {
+  background: #fef9c3;
+  color: #ca8a04;
+}
+
+.badge.completed {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+/* TABLE */
+.custom_table {
+  background: #fff;
+  border-radius: 12px;
+}
+
+.list_icon {
+  width: 35px;
+  height: 35px;
+  background: #ecfdf5;
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+/* GRID AVATAR */
+.avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+/* LIST AVATAR */
+.list_avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* PROGRESS */
+/* PROGRESS WRAPPER */
+.progress_wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.list_progress{
+ display: block !important;
+}
+.list_progress , .list_progress div{
+    flex-direction:  row !important;
+   
+}
+.list_progress .progress_wrapper{
+    width: 200px;
+}
+/* BAR */
+.progress {
+  flex: 1;
+  height: 4px !important;
+  background: #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* PROGRESS FILL */
+.progress_bar {
+  height: 100%;
+  background: #0f766e; /* premium green */
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+/* RIGHT TEXT */
+.progress_text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f766e;
+  min-width: 35px;
+  text-align: right;
+}
+
+
+

@@ -1,0 +1,476 @@
+/* ================================================
+   PRINT — only #invoicePrint is visible
+================================================ */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #invoicePrint,
+  #invoicePrint * {
+    visibility: visible !important;
+  }
+
+  #invoicePrint {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+
+  .no_print {
+    display: none !important;
+  }
+}
+
+/* ================================================
+   OVERLAY
+================================================ */
+.invoice_overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+/* ================================================
+   MODAL
+================================================ */
+.invoice_modal {
+  width: 100%;
+  max-width: 820px;
+  max-height: 92vh;
+  overflow-y: auto;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 30px 80px rgba(0, 35, 90, 0.25);
+}
+
+/* ================================================
+   HEADER
+================================================ */
+.inv_header_band {
+  background: var(--gradient-color);
+  padding: 34px 40px 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.inv_watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 120px;
+
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.04);
+  letter-spacing: 18px;
+}
+
+.inv_header_grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+.inv_badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  margin-bottom: 10px;
+}
+
+.inv_badge_dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.inv_badge_text {
+  color: #ffffff;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.inv_brand_name {
+  margin: 0;
+  color: #ffffff;
+  font-size: 28px;
+
+  letter-spacing: 2px;
+}
+
+.inv_brand_sub {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+}
+
+.inv_meta {
+  text-align: right;
+}
+
+.inv_meta_label {
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.inv_meta_num {
+  margin: 5px 0 12px;
+  color: #ffffff;
+  font-size: 22px;
+}
+
+.inv_meta_grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 5px 14px;
+}
+
+.inv_ml {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+}
+
+.inv_mv {
+  color: #ffffff;
+  font-size: 11px;
+}
+
+.inv_status {
+  color: #e3f2fd !important;
+  font-weight: 700;
+}
+
+/* ================================================
+   RULE
+================================================ */
+.inv_gold_rule {
+  height: 3px;
+  background: var(--main-color);
+}
+
+/* ================================================
+   BODY
+================================================ */
+.inv_body {
+  padding: 34px 40px;
+  background: #f7fbff;
+}
+
+.inv_section_header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.inv_section_label {
+  white-space: nowrap;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #212529bf;
+}
+
+.inv_section_line {
+  flex: 1;
+  height: 1px;
+  background: #d6e8ff;
+}
+
+/* ================================================
+   WINNER CARD
+================================================ */
+.inv_winner_card {
+  display: flex;
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.inv_winner_accent {
+  width: 5px;
+  background: var(--gradient-color);
+}
+
+.inv_winner_content {
+  flex: 1;
+  padding: 22px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.inv_winner_left {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.inv_avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--gradient-color);
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-weight: 700;
+}
+
+.inv_winner_label {
+  margin: 0 0 4px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #212529bf;
+}
+
+.inv_winner_name {
+  margin: 0;
+  font-size: 20px;
+  color: var(--main-color);
+  font-weight: 600;
+}
+
+.inv_winner_id {
+  margin: 3px 0 0;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.inv_winner_stats {
+  display: flex;
+  gap: 32px;
+}
+
+.inv_stat {
+  text-align: right;
+}
+
+.inv_stat_label {
+  margin: 0 0 5px;
+  font-size: 10px;
+  color: #212529bf;
+}
+
+.inv_stat_val {
+  margin: 0;
+  font-size: 21px;
+  color: var(--main-color);
+  font-weight: 700;
+}
+
+.inv_stat_note {
+  margin: 3px 0 0;
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* ================================================
+   TABLE
+================================================ */
+.inv_table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  overflow: hidden;
+}
+
+.inv_th {
+  background: var(--gradient-color);
+  color: #ffffff;
+  padding: 12px 16px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.inv_th_center {
+  text-align: center;
+}
+
+.inv_th_right {
+  text-align: right;
+}
+
+.inv_table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eef6ff;
+      font-size: 14px;
+}
+
+.inv_row_even {
+  background: #f8fbff;
+}
+
+.inv_td_main {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.inv_td_sub {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.inv_td_pct {
+  text-align: center;
+  color: #334155;
+}
+
+.inv_td_amt {
+  text-align: right;
+  font-weight: 700;
+  color: var(--main-color);
+}
+
+.inv_td_danger {
+  color: #dc2626 !important;
+}
+
+.inv_td_success {
+  color: #16a34a !important;
+}
+
+.inv_td_primary {
+  color: #2a8ec0 !important;
+}
+
+/* ================================================
+   TOTALS
+================================================ */
+.inv_totals_wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.inv_totals {
+  width: 320px;
+  border: 1px solid #dbeafe;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #ffffff;
+      font-size: 14px;
+}
+
+.inv_total_row {
+  display: flex;
+  justify-content: space-between;
+  padding: 11px 16px;
+  border-bottom: 1px solid #eef6ff;
+}
+
+.inv_total_label {
+  color: #64748b;
+}
+
+.inv_total_val {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.inv_grand_row {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--gradient-color);
+}
+
+.inv_grand_label,
+.inv_grand_val {
+  color: #ffffff;
+
+  font-size: 14px;
+}
+
+/* ================================================
+   FOOTER
+================================================ */
+.inv_footer_band {
+  background: var(--main-color);
+  padding: 22px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inv_footer_text p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.inv_seal {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-size: 10px;
+  text-align: center;
+}
+
+/* ================================================
+   ACTION BUTTONS
+================================================ */
+.inv_action_bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 18px 24px;
+  background: #eef6ff;
+}
+
+.inv_btn_close,
+.inv_btn_print {
+  border: none;
+  padding: 10px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.inv_btn_close {
+  background: #ffffff;
+  color: #dc2626;
+  border: 1px solid #bfdbfe;
+}
+
+.inv_btn_print {
+  background: var(--gradient-color);
+  color: #ffffff;
+}

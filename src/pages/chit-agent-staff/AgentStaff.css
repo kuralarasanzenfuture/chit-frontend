@@ -1,0 +1,45 @@
+.agent-card {
+  background: var(--gradient-color);
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  transition: 0.3s;
+  position: relative;
+}
+.agent-card .user_icon {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  background: #ffffff14;
+  color: #fff;
+  font-size: 36px;
+  text-transform: uppercase;
+  font-weight: 500;
+  display: flex;
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+}
+.agent-card .user_name {
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
+}
+.agent-card .user_id {
+  font-size: 12px;
+  color: #fff9;
+  margin-bottom: 0px;
+}
+.agent-card .user_id span {
+  color: var(--main-color);
+}
+.user_detail .info_detail .title {
+  font-size: 11px;
+  color: #444;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.user_detail .info_detail .title i {
+  margin-right: 5px;
+  color: var(--main-color);
+}

@@ -1,0 +1,358 @@
+.stack_list .stack_card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.stack_list .stack_card .icon {
+  width: 40px;
+  height: 40px;
+  background: #efefef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #121212;
+  margin-bottom: 15px;
+}
+.stack_list .stack_card .stack_badge {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background-color: #d7ebf8;
+  color: var(--main-color);
+}
+
+.stack_list .stack_card .stack_title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #212529bf;
+}
+.stack_list .stack_card .stack_count {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--main-color);
+}
+.stack_list .stack_card small {
+  font-size: 11px;
+}
+.stack_list .stack_card .progress {
+  --bs-progress-bar-bg: var(--main-color) !important;
+  height: 4px !important;
+}
+.stack_list .stack_card .progress-bar {
+  font-size: 10px;
+}
+
+.progress_wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+/* PROGRESS BAR */
+.progress {
+  flex: 1; /* 🔥 takes full space */
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--main-color);
+  transition: width 0.3s ease;
+}
+
+/* RIGHT TEXT */
+.progress_text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--main-color);
+  min-width: 40px;
+  text-align: right;
+}
+
+.chart_card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* HEADER */
+.chart_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.chart_header h4 {
+  margin: 0;
+}
+
+/* FILTER BUTTONS */
+.filter_btns button {
+  border: none;
+  padding: 6px 12px;
+  margin-left: 6px;
+  border-radius: 6px;
+  background: #f3f4f6;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.filter_btns button.active {
+  background: var(--gradient-color);
+  color: #fff;
+}
+
+.auction_detail {
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.auction_detail .auction_card {
+  background: #f9f9f9;
+  padding: 15px;
+  border: 1px solid #f8f8f8;
+}
+.auction_detail .auction_card .card-title {
+  font-size: 14px;
+}
+.auction_detail .auction_card .date_text {
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #444;
+}
+.auction_detail .auction_card .card-text {
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 3px;
+}
+.auction_detail .auction_card .card-count {
+  color: var(--main-color);
+  font-size: 14px;
+}
+.card-time {
+  color: #000;
+}
+
+.auction-btn {
+  background: transparent !important;
+  color: #000 !important;
+  padding: 8px 16px !important;
+  border-radius: 8px;
+  font-size: 13px !important;
+  border: 1px solid #ccc !important;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+}
+
+.auction-btn:hover {
+  background: #efefef !important;
+  color: #000 !important;
+}
+
+/* ===============================
+   CUSTOMER CELL
+================================= */
+.customer_cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* AVATAR */
+.name_badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ===============================
+   STATUS
+================================= */
+.status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* STATUS COLORS */
+.status.credited {
+  background: #ecfdf5;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.status.pending {
+  background: #fefce8;
+  color: #ca8a04;
+  border: 1px solid #fde68a;
+}
+
+.status.failed {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+/* ══════════════════════════════════════════
+   QUICK ACTIONS WIDGET
+   Matches your dashboard — light theme,
+   same font, same card style
+══════════════════════════════════════════ */
+
+.qa_card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* ── Header ── */
+.qa_header {
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid #f0f1f4;
+}
+
+.qa_title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #111827;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+/* ── Grid ── */
+.qa_grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: #f0f1f4; /* gap color */
+}
+
+/* ── Each Action Tile ── */
+.qa_item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 25px 18px ;
+  background: #ffffff;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover fill using accent bg */
+.qa_item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent-bg);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.qa_item:hover::before {
+  opacity: 1;
+}
+
+/* Left accent bar on hover */
+.qa_item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 0 3px 3px 0;
+  transform: scaleY(0);
+  transition: transform 0.2s ease;
+  transform-origin: bottom;
+}
+
+.qa_item:hover::after {
+  transform: scaleY(1);
+}
+
+/* Icon */
+.qa_icon_wrap {
+  position: relative;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 7px;
+  background: var(--accent-bg);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--accent);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.qa_item:hover .qa_icon_wrap {
+  transform: scale(1.08) translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+/* Text */
+.qa_label {
+  position: relative;
+  z-index: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+  margin-bottom: 0px;
+}
+
+.qa_sub {
+  position: relative;
+  z-index: 1;
+  font-size: 12px;
+  color: #212529bf;
+  font-weight: 500;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .qa_grid {
+    grid-template-columns: 1fr;
+  }
+}
