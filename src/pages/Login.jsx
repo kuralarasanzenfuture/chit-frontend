@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import "./Login.css";
+import logo from "../assets/images/logo.webp"; // ← place logo.webp in src/assets/
 import { loginUser, setErrors, setLoading } from "../slices/AuthSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../api/api";
@@ -13,13 +14,11 @@ export const Login = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const loading = useSelector((state) => state.userAuth.loading);
 
- useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem("token");
-
-    if (token) {
-      navigate("/dashboard", { replace: true });
-    }
+    if (token) navigate("/dashboard", { replace: true });
   }, []);
 
   const handleLogin = async (e) => {
@@ -40,82 +39,97 @@ export const Login = () => {
   };
 
   return (
-    <>
-      {/* Bootstrap container */}
-      <div className="outer-card">
-        {/* Background decorative circles */}
-        <div className="bg-circle bg-circle-1" />
-        <div className="bg-circle bg-circle-2" />
-        <div className="bg-circle bg-circle-3" />
+    <div className="space-login-root">
+      {/* ── Starfield layers ── */}
+      <div className="stars-layer stars-sm" />
+      <div className="stars-layer stars-md" />
+      <div className="stars-layer stars-lg" />
 
-        <div className="row align-items-center justify-content-center h-100 gx-0">
-          {/* ── LEFT: Welcome ── */}
-          <div className="col-12 col-md-6 ps-5 py-5 pe-3" style={{ position: "relative", zIndex: 2 }}>
-            <div className="welcome-title ">Welcome</div>
-            <div className="welcome-subtitle ">Manage your chit groups smarter.</div>
-            <p className="welcome-desc mb-0">
-              Track payments, late fees, and overdue customers — all in one place. Trusted by 500+ chit fund operators.
-            </p>
-          </div>
+      {/* ── Shooting comets ── */}
+      <div className="comet comet-1" />
+      <div className="comet comet-2" />
+      <div className="comet comet-3" />
 
-          {/* ── RIGHT: Sign-in floating card ── */}
-          <div className="col-12 col-md-4 py-4 pe-4 ps-2">
-            <div className="signin-card">
-              {/* Title */}
-              <div className="signin-title mb-1">Welcome back 👋</div>
-              <p className="signin-subtitle mb-4">Sign in to your account</p>
+      {/* ── Planets ── */}
+      <div className="planet planet-blue">
+        <div className="planet-ring" />
+        <div className="planet-surface" />
+      </div>
+      <div className="planet planet-mid" />
+      <div className="planet planet-small" />
 
-              <form onSubmit={handleLogin}>
-                <div className="login_form_group">
-                  <label className="login_label">Username / Email</label>
-                  <div className="login_input_wrap">
-                    <i className="bi bi-envelope login_input_icon" />
-                    <input
-                      className="login_input"
-                      value={login}
-                      onChange={(e) => setLogin(e.target.value)}
-                      type="text"
-                      placeholder="Enter phone or email"
-                      required
-                    />
-                  </div>
-                </div>
+      {/* ── Logo — top-left ── */}
+      <div className="space-logo">
+        <img src={logo} alt="ZenFuture" className="space-logo-img" />
+      </div>
 
-                <div className="login_form_group">
-                  <label className="login_label">Password</label>
-                  <div className="login_input_wrap">
-                    <i className="bi bi-lock login_input_icon" />
-                    <input
-                      className="login_input"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
-                      required
-                    />
-                    <button type="button" className="login_pw_toggle" onClick={() => setShowPassword(!showPassword)}>
-                      <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`} />
-                    </button>
-                  </div>
-                </div>
+      {/* ── Bottom-left tagline ── */}
+      <div className="space-tagline">
+        <div className="tagline-line1">SIGN IN TO YOUR</div>
+        <div className="tagline-line2">DASHBOARD!</div>
+      </div>
 
-                {/* <div className="login_row_between">
-                  <label className="login_remember">
-                    <input type="checkbox" /> Remember me
-                  </label>
-                  <a href="#" className="login_forgot">
-                    Forgot password?
-                  </a>
-                </div> */}
+      {/* ── Right: Form panel ── */}
+      <div className="space-form-panel">
+        <h1 className="space-form-title">SIGN IN</h1>
+        <p className="space-form-subtitle">Sign in with your credentials</p>
 
-                <button type="submit" className="btn main-btn">
-                  Sign in to Dashboard
-                </button>
-              </form>
+        <form onSubmit={handleLogin} className="space-form" noValidate>
+          {/* Username / Email */}
+          <div className="space-field">
+            <div className="space-input-wrap">
+              <span className="space-input-icon">
+                <i className="bi bi-person" />
+              </span>
+              <input
+                className="space-input"
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
+                type="text"
+                placeholder="Username or Email"
+                required
+              />
             </div>
           </div>
+
+          {/* Password */}
+          <div className="space-field">
+            <div className="space-input-wrap">
+              <span className="space-input-icon">
+                <i className="bi bi-lock" />
+              </span>
+              <input
+                className="space-input"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                required
+              />
+              <button type="button" className="space-pw-toggle" onClick={() => setShowPassword(!showPassword)}>
+                <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`} />
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" className="space-submit-btn">
+            <span>{loading ? "Signing" : "Sign in to Dashboard"}</span>
+          </button>
+        </form>
+
+        <div className="space-divider">
+          <span className="divider-line" />
+          <span className="divider-text">Manage your chit groups smarter</span>
+          <span className="divider-line" />
         </div>
+
+        <p className="space-terms">
+          By signing in you agree to our{" "}
+          <a href="#" className="space-terms-link">
+            Terms and Conditions
+          </a>
+        </p>
       </div>
-    </>
+    </div>
   );
 };

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import avatar from "../../assets/images/avatar-1.png";
+import { toast } from "react-toastify";
+import api from "../../api/api";
 
 const activityData = [
   {
@@ -116,14 +118,177 @@ const getInitials = (name) =>
     .join("")
     .toUpperCase();
 
+const initialValue = {
+  customerEmail: "",
+  customerName: "",
+  customerPhone: "",
+  district: "",
+  doorNumber: "",
+  pincode: "",
+  place: "",
+  state: "",
+  address: "",
+  aadharNumber: "",
+  panNumber: "",
+  idProofNumber: "",
+  idProofType: "",
+  addressProofType: "",
+};
+
 export const ChitCustomer = () => {
   const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState(initialValue);
+  const [errors, setErrors] = useState({});
+
+  const [files, setFiles] = useState({
+    photoFile: null,
+    idProofFile: null,
+    addressProofFile: null,
+  });
+
   const [preview, setPreview] = useState(null);
 
-  const handleChange = (e) => {
+  // ================= VALIDATION =================
+  const validate = () => {
+    let newErrors = {};
+
+    // Full Name
+    if (!formData.customerName) {
+      newErrors.full_name = "Please Enter the Name";
+    }
+
+    // Phone
+    if (!formData.customerPhone) {
+      newErrors.phone = "Please Enter Your Phone Number";
+    } else if (!/^[6-9]\d{9}$/.test(formData.customerPhone)) {
+      newErrors.phone = "Enter valid 10 digit phone";
+    }
+
+    // PAN
+    if (!formData.panNumber) {
+      newErrors.pan_number = "Please Enter PAN Number";
+    } else if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(formData.panNumber)) {
+      newErrors.pan_number = "PAN format: ABCDE1234F";
+    }
+
+    // Aadhar
+    if (!formData.aadharNumber) {
+      newErrors.aadhar_number = "Please Enter Aadhar Number";
+    } else if (!/^\d{12}$/.test(formData.aadharNumber)) {
+      newErrors.aadhar_number = "Aadhaar must be 12 digits";
+    }
+
+    // Files
+    // Files (only required for CREATE)
+    // if (!editPlanId) {
+    //   if (!formData.aadhar_front_image) {
+    //     newErrors.aadhar_front_image = "Please Upload Aadhar Front";
+    //   }
+    //   if (!formData.aadhar_back_image) {
+    //     newErrors.aadhar_back_image = "Please Upload Aadhar Back";
+    //   }
+    //   if (!formData.pan_card_image) {
+    //     newErrors.pan_card_image = "Please Upload PAN Card";
+    //   }
+    //   if (!formData.bank_passbook_image) {
+    //     newErrors.bank_passbook_image = "Please Upload Passbook";
+    //   }
+    // }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
+    const name = e.target.name;
+
+    if (!file) return;
+
+    let allowedTypes = [];
+    let maxSize = 5 * 1024 * 1024; // 5MB
+
+    // ✅ Profile → ONLY images
+    if (name === "photoFile") {
+      allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+    }
+
+    // ✅ KYC → Images + PDF
+    if (name === "idProofFile" || name === "addressProofFile") {
+      allowedTypes = ["image/jpeg", "image/png", "image/jpg", "application/pdf"];
+    }
+
+    // ❌ Type validation
+    if (!allowedTypes.includes(file.type)) {
+      alert("Only JPG, PNG or PDF allowed");
+      return;
+    }
+
+    // ❌ Size validation
+    if (file.size > maxSize) {
+      alert("Max file size is 5MB");
+      return;
+    }
+
+    // ✅ Preview only for image profile
+    if (name === "photoFile") {
+      const imageUrl = URL.createObjectURL(file);
+      setPreview(imageUrl);
+    }
+
+    // ✅ Save file
+    setFiles((prev) => ({
+      ...prev,
+      [name]: file,
+    }));
+  };
+
+  const handleInput = (e) => {
+    let { name, value } = e.target;
+
+    setFormData((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+
+    // append text
+    Object.keys(formData).forEach((key) => {
+      data.append(key, formData[key]);
+    });
+
+    // append files
+    Object.keys(files).forEach((key) => {
+      if (files[key]) {
+        data.append(key, files[key]);
+      }
+    });
+
+    try {
+      await api.post("/api/customer", data); // ✅ FIXED URL
+
+      toast.success("Customer Added Successfully");
+
+      setFormData(initialValue);
+      setFiles({
+        photoFile: null,
+        idProofFile: null,
+        addressProofFile: null,
+      });
+      setPreview(null);
+
+      closeModal();
+    } catch (err) {
+      console.error(err);
+      toast.error("Upload failed");
     }
   };
 
@@ -143,12 +308,7 @@ export const ChitCustomer = () => {
         </div>
         <div className="search-item">
           <div className="search-box ">
-            <input
-              className="search-input"
-              placeholder="Search By Name or ID..."
-              type="text"
-              value=""
-            />
+            <input className="search-input" placeholder="Search By Name or ID..." type="text" value="" />
             <i className="bi bi-search search-icon"></i>
           </div>
         </div>
@@ -197,7 +357,6 @@ export const ChitCustomer = () => {
               <th>Aadhar </th>
               <th>PAN</th>
               <th>Address</th>
-              <th>Nominee Name</th>
 
               <th>KYC Status</th>
               <th>Action</th>
@@ -208,10 +367,7 @@ export const ChitCustomer = () => {
             {activityData.map((item, index) => (
               <tr key={index}>
                 <td className="customer_cell">
-                  <span
-                    className="name_badge"
-                    style={{ background: getColor(index) }}
-                  >
+                  <span className="name_badge" style={{ background: getColor(index) }}>
                     {getInitials(item.name)}
                   </span>
                   {item.name}
@@ -223,12 +379,10 @@ export const ChitCustomer = () => {
 
                 <td>{item.pan}</td>
                 <td>{item.address}</td>
-                <td>{item.nomineeName}</td>
 
                 <td>
                   <small
-                    className={`py-1 px-2 rounded-pill ${item.kycStatus === "Verified" ? "bg-success-subtle text-success" : item.kycStatus === "Rejected" ? "bg-danger-subtle text-danger" : "bg-warning-subtle text-warning"}`}
-                  >
+                    className={`py-1 px-2 rounded-pill ${item.kycStatus === "Verified" ? "bg-success-subtle text-success" : item.kycStatus === "Rejected" ? "bg-danger-subtle text-danger" : "bg-warning-subtle text-warning"}`}>
                     {item.kycStatus || "Pending"}
                   </small>
                 </td>
@@ -278,46 +432,38 @@ export const ChitCustomer = () => {
 
           <div className="modal modal-form fade show d-block" tabIndex="-1">
             <div className="modal-dialog modal_form modal-dialog-centered modal-lg">
-            {/* <div className="modal-dialog modal_form modal-dialog-centered modal-lg modal-dialog-scrollable"> */}
               <div className="modal-content">
                 <div className="modal-header form_title ">
                   <h1 className="title ">Add Customer</h1>
-                  <button
-                    type="button"
-                    className="btn-close btn-sm"
-                    onClick={closeModal}
-                  ></button>
+                  <button type="button" className="btn-close btn-sm" onClick={closeModal}></button>
                 </div>
                 <div className="modal-body form_content">
-                  <form className="">
+                  <form className="" onSubmit={handleSubmit}>
                     <div className="row gy-4">
                       <div className="col-lg-12">
-                        <div className="upload-circle-wrap">
-                          <label
-                            htmlFor="uploadFile"
-                            className="upload-circle-box"
-                          >
-                            {preview ? (
-                              <img
-                                src={preview}
-                                alt="profile"
-                                className="circle-preview"
-                              />
-                            ) : (
-                              <>
-                                <i className="bi bi-person-fill circle-user-icon"></i>
-                                <i className="bi bi-arrow-up-circle-fill circle-upload-icon"></i>
-                              </>
-                            )}
-                          </label>
+                        <div className="profile-upload-container">
+                          <div className="upload-left">
+                            <label htmlFor="uploadFile" className="upload-circle">
+                              {preview ? (
+                                <img src={preview} alt="profile" className="preview-img" />
+                              ) : (
+                                <div className="upload-placeholder">
+                                  <i className="bi bi-person-fill user-icon"></i>
+                                  <i className="bi bi-arrow-up upload-icon"></i>
+                                </div>
+                              )}
+                            </label>
 
-                          <input
-                            type="file"
-                            id="uploadFile"
-                            hidden
-                            accept="image/*"
-                            onChange={handleChange}
-                          />
+                            <input type="file" id="uploadFile" name="photoFile" hidden accept="image/*" onChange={handleFileChange} />
+                          </div>
+
+                          <div className="upload-right">
+                            <h2>Profile Photo</h2>
+                            <p>Please upload a professional headshot, JPEG or PNG, m ax 5MB</p>
+                            <label htmlFor="uploadFile" className="upload-link">
+                              Choose file from local Storage
+                            </label>
+                          </div>
                         </div>
                       </div>
                       <div className="col-lg-4">
@@ -325,40 +471,49 @@ export const ChitCustomer = () => {
                           Customer Name
                         </label>
                         <input
-                          className="form-control undefined"
+                          className="form-control"
                           placeholder="Customer Name"
                           type="text"
-                          value=""
-                          name="customer_name"
+                          value={formData.customerName}
+                          onChange={handleInput}
+                          name="customerName"
                         />
-                        <div className="invalid-feedback"></div>
+                        <small className="text-danger"></small>
                       </div>
                       <div className="col-lg-4">
                         <label for="" className="form-label">
                           Phone Number
                         </label>
                         <input
-                          maxlength="10"
-                          className="form-control undefined"
+                          className="form-control"
                           placeholder="Phone Number"
                           type="text"
-                          value=""
-                          name="phone_number"
+                          value={formData.customerPhone}
+                          onChange={handleInput}
+                          name="customerPhone"
                         />
-                        <div className="invalid-feedback"></div>
+                        <small className="text-danger"></small>
+                      </div>
+                      <div className="col-lg-4">
+                        <label for="" className="form-label">
+                          Email
+                        </label>
+                        <input
+                          className="form-control"
+                          placeholder="Email Address"
+                          type="text"
+                          value={formData.customerEmail}
+                          onChange={handleInput}
+                          name="customerEmail"
+                        />
+                        <small className="text-danger"></small>
                       </div>
                       <div className="col-lg-4">
                         <label for="" className="form-label">
                           Place
                         </label>
-                        <input
-                          className="form-control undefined"
-                          placeholder="Place"
-                          type="text"
-                          value=""
-                          name="place"
-                        />
-                        <div className="invalid-feedback"></div>
+                        <input className="form-control" placeholder="Place" type="text" value={formData.place} onChange={handleInput} name="place" />
+                        <small className="text-danger"></small>
                       </div>
                       <div className="col-lg-4">
                         <label for="" className="form-label">
@@ -366,78 +521,77 @@ export const ChitCustomer = () => {
                         </label>
                         <input
                           maxlength="12"
-                          className="form-control undefined"
-                          placeholder=" Aadhar Number"
-                          value=""
-                          name="aadhar_number"
+                          className="form-control"
+                          placeholder="Aadhar Number"
+                          value={formData.aadharNumber}
+                          onChange={handleInput}
+                          name="aadharNumber"
                         />
-                        <div className="invalid-feedback"></div>
+                        <small className="text-danger"></small>
                       </div>
                       <div className="col-lg-4">
                         <label for="" className="form-label">
                           PAN Number
                         </label>
                         <input
-                          className="form-control undefined"
+                          className="form-control"
                           placeholder="PAN Number"
                           type="text"
-                          value=""
-                          name="pan_number"
+                          onChange={handleInput}
+                          value={formData.panNumber}
+                          name="panNumber"
                         />
-                        <div className="invalid-feedback"></div>
+                        <small className="text-danger"></small>
                       </div>
                       <div className="col-lg-2">
                         <label for="" className="form-label">
                           Door no
                         </label>
                         <input
-                          className="form-control undefined"
+                          className="form-control"
                           placeholder="ex: 12/3 B"
                           type="text"
-                          value=""
-                          name="door_no"
+                          onChange={handleInput}
+                          value={formData.doorNumber}
+                          name="doorNumber"
                         />
-                        <div className="invalid-feedback"></div>
+                        <small className="text-danger"></small>
                       </div>
 
                       <div className="col-lg-4">
                         <label for="" className="form-label">
                           State
                         </label>
-                        <input
-                          className="form-control undefined"
-                          placeholder="State"
-                          type="text"
-                          value=""
-                          name="state"
-                        />
-                        <div className="invalid-feedback"></div>
+                        <input className="form-control" placeholder="State" type="text" onChange={handleInput} value={formData.state} name="state" />
+                        <small className="text-danger"></small>
                       </div>
                       <div className="col-lg-4">
                         <label for="" className="form-label">
                           District
                         </label>
                         <input
-                          className="form-control undefined"
+                          className="form-control"
                           placeholder="District"
                           type="text"
-                          value=""
+                          onChange={handleInput}
+                          value={formData.district}
                           name="district"
                         />
-                        <div className="invalid-feedback"></div>
+                        <small className="text-danger"></small>
                       </div>
-                      <div className="col-lg-4">
+                      <div className="col-lg-2">
                         <label for="" className="form-label">
                           Pincode
                         </label>
                         <input
-                          className="form-control undefined"
+                          className="form-control"
                           placeholder="Pincode"
                           type="number"
-                          value=""
+                          onChange={handleInput}
+                          value={formData.pincode}
                           name="pincode"
                         />
-                        <div className="invalid-feedback"></div>
+                        <small className="text-danger"></small>
                       </div>
                       <div className="col-lg-12">
                         <label for="" className="form-label">
@@ -446,11 +600,12 @@ export const ChitCustomer = () => {
                         <textarea
                           name="address"
                           id=""
-                          className="form-control undefined"
+                          className="form-control"
+                          onChange={handleInput}
+                          value={formData.address}
                           placeholder="Address"
-                          rows="2"
-                        ></textarea>
-                        <div className="invalid-feedback"></div>
+                          rows="2"></textarea>
+                        <small className="text-danger"></small>
                       </div>
                       {/* ================= KYC DETAILS ================= */}
                       <div className="col-12">
@@ -459,7 +614,7 @@ export const ChitCustomer = () => {
 
                       <div className="col-lg-4">
                         <label className="form-label">ID Proof Type</label>
-                        <select className="form-select" name="id_proof_type">
+                        <select className="form-select" name="idProofType" value={formData.idProofType} onChange={handleInput}>
                           <option value="">Select</option>
                           <option value="AADHAR">Aadhar</option>
                           <option value="PAN">PAN</option>
@@ -474,25 +629,20 @@ export const ChitCustomer = () => {
                           type="text"
                           className="form-control"
                           placeholder="Enter ID Number"
-                          name="id_proof_number"
+                          value={formData.idProofNumber}
+                          onChange={handleInput}
+                          name="idProofNumber"
                         />
                       </div>
 
                       <div className="col-lg-4">
                         <label className="form-label">Upload ID Proof</label>
-                        <input
-                          type="file"
-                          className="form-control"
-                          name="id_proof_file"
-                        />
+                        <input type="file" className="form-control" name="idProofFile" accept="image/*,application/pdf" onChange={handleFileChange} />
                       </div>
 
                       <div className="col-lg-4">
                         <label className="form-label">Address Proof Type</label>
-                        <select
-                          className="form-select"
-                          name="address_proof_type"
-                        >
+                        <select className="form-select" name="addressProofType" onChange={handleInput} value={formData.addressProofType}>
                           <option value="">Select</option>
                           <option value="AADHAR">Aadhar</option>
                           <option value="UTILITY">Utility Bill</option>
@@ -501,40 +651,19 @@ export const ChitCustomer = () => {
                       </div>
 
                       <div className="col-lg-4">
-                        <label className="form-label">
-                          Upload Address Proof
-                        </label>
+                        <label className="form-label">Upload Address Proof</label>
                         <input
                           type="file"
                           className="form-control"
-                          name="address_proof_file"
+                          name="addressProofFile"
+                          accept="image/*,application/pdf"
+                          onChange={handleFileChange}
                         />
                       </div>
 
-                      <div className="col-lg-4">
-                        <label className="form-label">Upload Photo</label>
-                        <input
-                          type="file"
-                          className="form-control"
-                          name="photo"
-                        />
-                      </div>
-
-                      <div className="col-lg-4">
-                        <label className="form-label">KYC Status</label>
-                        <select className="form-select" name="kyc_status">
-                          <option value="PENDING">Pending</option>
-                          <option value="VERIFIED">Verified</option>
-                          <option value="REJECTED">Rejected</option>
-                        </select>
-                      </div>
                       {/* BUTTON */}
                       <div className="col-12 text-end mt-3 border-top pt-3">
-                        <button
-                          type="button"
-                          className="btn light-btn me-2"
-                          onClick={closeModal}
-                        >
+                        <button type="button" className="btn light-btn me-2" onClick={closeModal}>
                           Cancel
                         </button>
                         <button type="submit" className="btn main-btn">

@@ -36,9 +36,9 @@ const AUDIT_ITEMS = [
 ];
 
 export const ProfileEdit = () => {
-  const { activeBranch, setActiveBranch, BRANCHES } = useBranch();
+  // const { activeBranch, setActiveBranch, BRANCHES } = useBranch();
 
-  const [branches, setBranches] = useState(BRANCHES);
+  // const [branches, setBranches] = useState(BRANCHES);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newBranch, setNewBranch] = useState({
     name: "",

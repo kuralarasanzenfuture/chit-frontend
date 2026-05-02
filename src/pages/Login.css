@@ -1,229 +1,536 @@
-/* Outer blue card */
-.outer-card {
-  background: var(--gradient-color);
-  box-shadow:
-    0 28px 72px rgba(20, 70, 180, 0.38),
-    0 6px 20px rgba(0, 0, 0, 0.14);
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  height: 100vh;
+/* ═══════════════════════════════════════════════════════
+   ZENFUTURE SPACE LOGIN  —  Navy · Teal brand theme
+   ═══════════════════════════════════════════════════════ */
+
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600&display=swap");
+
+/* ── Brand tokens ── */
+:root {
+  --zf-deep: #00111c; /* darkest bg */
+  --zf-dark: #001e2e; /* base bg    */
+  --zf-mid: #002f4a; /* gradient start */
+  --zf-main: #004b63; /* gradient end / main brand */
+  --zf-light: #006e8a; /* lighter teal accent */
+  --zf-bright: #00a8cc; /* highlight / glow */
+  --zf-steel: #1a5f7a; /* planet mid tone */
+
+  --input-bg: rgba(0, 47, 74, 0.55);
+  --input-border: rgba(0, 168, 204, 0.25);
+  --input-focus: rgba(0, 168, 204, 0.55);
+
+  --text-primary: #e8f4f8;
+  --text-muted: rgba(160, 210, 230, 0.6);
+  --accent-glow: rgba(0, 168, 204, 0.35);
+
+  --font-display: "Barlow Condensed", sans-serif;
+  --font-body: "Barlow", sans-serif;
 }
 
-/* Decorative circles */
-.bg-circle {
+/* ══════════════════════════════════════
+   ROOT
+   ══════════════════════════════════════ */
+.space-login-root {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 15% 8%, #003a56 0%, #001e2e 40%, #00111c 100%);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+  font-family: var(--font-body);
+}
+
+/* ══════════════════════
+   STAR LAYERS
+   ══════════════════════ */
+.stars-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.stars-sm {
+  background-image:
+    radial-gradient(circle, rgba(180, 230, 255, 0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle, rgba(180, 230, 255, 0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle, rgba(180, 230, 255, 0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle, rgba(180, 230, 255, 0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle, rgba(180, 230, 255, 0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle, rgba(180, 230, 255, 0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.85) 0.5px, transparent 0.5px);
+  background-size: 800px 600px;
+  background-position:
+    12% 5%,
+    25% 18%,
+    38% 7%,
+    55% 22%,
+    67% 3%,
+    80% 15%,
+    8% 45%,
+    30% 60%,
+    50% 35%,
+    70% 55%,
+    85% 40%,
+    92% 70%;
+  animation: twinkle 6s ease-in-out infinite alternate;
+  opacity: 0.65;
+}
+
+.stars-md {
+  background-image:
+    radial-gradient(circle, rgba(0, 168, 204, 0.8) 1px, transparent 1px), radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+    radial-gradient(circle, rgba(0, 168, 204, 0.8) 1px, transparent 1px), radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+    radial-gradient(circle, rgba(0, 168, 204, 0.8) 1px, transparent 1px), radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+    radial-gradient(circle, rgba(0, 168, 204, 0.8) 1px, transparent 1px), radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
+  background-size: 900px 700px;
+  background-position:
+    5% 30%,
+    20% 55%,
+    42% 48%,
+    60% 80%,
+    73% 25%,
+    88% 60%,
+    15% 85%,
+    95% 12%;
+  animation: twinkle 8s ease-in-out infinite alternate-reverse;
+  opacity: 0.5;
+}
+
+.stars-lg {
+  background-image:
+    radial-gradient(circle, rgba(0, 168, 204, 1) 1.5px, transparent 1.5px), radial-gradient(circle, rgba(255, 255, 255, 1) 1.5px, transparent 1.5px),
+    radial-gradient(circle, rgba(0, 168, 204, 1) 1.5px, transparent 1.5px), radial-gradient(circle, rgba(255, 255, 255, 1) 1.5px, transparent 1.5px);
+  background-size: 1200px 800px;
+  background-position:
+    35% 12%,
+    65% 75%,
+    82% 30%,
+    10% 70%;
+  animation: twinkle 4s ease-in-out infinite alternate;
+  opacity: 0.85;
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
+
+/* ══════════════════════
+   COMETS
+   ══════════════════════ */
+.comet {
+  position: absolute;
+  width: 200px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(0, 168, 204, 0) 0%, rgba(0, 168, 204, 1) 100%);
+  opacity: 0;
+  animation: comet-fly 5s ease-in-out infinite;
+}
+.comet-1 {
+  top: 18%;
+  left: 28%;
+  transform: rotate(-33deg);
+  animation-delay: 0s;
+  animation-duration: 4.5s;
+}
+.comet-2 {
+  top: 44%;
+  left: 8%;
+  transform: rotate(-25deg);
+  animation-delay: 2s;
+  animation-duration: 5.5s;
+}
+.comet-3 {
+  top: 65%;
+  left: 16%;
+  transform: rotate(-40deg);
+  animation-delay: 4s;
+  animation-duration: 4s;
+}
+
+@keyframes comet-fly {
+  0% {
+    opacity: 0;
+    transform: rotate(-33deg) translateX(0);
+  }
+  10% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-33deg) translateX(280px);
+  }
+}
+
+/* ══════════════════════
+   PLANETS
+   ══════════════════════ */
+.planet {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
 }
-.bg-circle-1 {
-  width: 340px;
-  height: 340px;
-  bottom: -120px;
-  left: -80px;
-  background: rgba(255, 255, 255, 0.07);
-}
-.bg-circle-2 {
-  width: 240px;
-  height: 240px;
-  bottom: 30px;
-  left: 130px;
-  background: rgba(255, 255, 255, 0.07);
-}
-.bg-circle-3 {
-  width: 160px;
-  height: 160px;
-  top: -50px;
-  left: 80px;
-  background: rgba(255, 255, 255, 0.05);
-}
 
-/* Left welcome text */
-.welcome-title {
-  font-size: 52px;
-  font-weight: 500;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: #fff;
-  line-height: 1;
-  margin-bottom: 15px;
-}
-
-.welcome-subtitle {
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 15px;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.welcome-desc {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.68);
-  line-height: 1.82;
-  font-weight: 400;
-}
-
-/* Floating white sign-in card */
-.signin-card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 36px 28px 28px;
+/* ── Large planet — navy-to-teal, top-left bleeding off-screen ── */
+.planet-blue {
+  width: 480px;
+  height: 480px;
+  top: -175px;
+  left: -110px;
+  background: radial-gradient(circle at 33% 30%, #00a8cc 0%, #006e8a 28%, #004b63 58%, #002f4a 100%);
   box-shadow:
-    0 20px 56px rgba(10, 40, 120, 0.22),
-    0 4px 16px rgba(0, 0, 0, 0.09);
-  position: relative;
-  z-index: 2;
+    0 0 90px rgba(0, 168, 204, 0.28),
+    inset -35px -35px 65px rgba(0, 20, 35, 0.55);
+  animation: planet-float 12s ease-in-out infinite;
 }
 
-.signin-title {
-  font-size: 30px;
-  font-weight: 800;
-  color: var(--main-color);
-}
-
-.signin-subtitle {
-  font-size: 13px;
-  color: #374151;
-}
-
-/* Inputs */
-.si-input {
-  width: 100%;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 12px 14px;
-  font-size: 13px;
-  color: #374151;
-  background: #fff;
-  outline: none;
-  transition: border-color 0.22s;
-}
-.si-input:focus {
-  border-color: var(--main-color);
-}
-.si-input::placeholder {
-  color: #b0bec5;
-}
-
-/* Password row */
-.pw-wrapper {
-  position: relative;
-}
-.pw-show {
+/* Surface texture */
+.planet-surface {
   position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--main-color);
-  cursor: pointer;
-  letter-spacing: 0.5px;
-  user-select: none;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-linear-gradient(155deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 20px, transparent 20px, transparent 40px);
+  mix-blend-mode: overlay;
 }
 
-/* Remember me */
-.remember-check {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--main-color);
-  cursor: pointer;
+/* Ring */
+.planet-ring {
+  position: absolute;
+  width: 158%;
+  height: 38%;
+  top: 49%;
+  left: -29%;
+  border-radius: 50%;
+  border: 13px solid rgba(0, 168, 204, 0.18);
+  transform: rotate(-14deg);
+}
+
+/* ── Medium steel-teal planet — centre-left ── */
+.planet-mid {
+  width: 195px;
+  height: 195px;
+  top: 38%;
+  left: 24%;
+  background: radial-gradient(circle at 36% 33%, #1a5f7a 0%, #004b63 48%, #002030 100%);
+  box-shadow:
+    0 0 50px rgba(0, 110, 138, 0.3),
+    inset -14px -14px 32px rgba(0, 15, 25, 0.5);
+  animation: planet-float 9s ease-in-out infinite reverse;
+}
+
+/* ── Small accent planet — bottom-left ── */
+.planet-small {
+  width: 95px;
+  height: 95px;
+  bottom: 18%;
+  left: 13%;
+  background: radial-gradient(circle at 38% 35%, #006e8a 0%, #004b63 55%, #001e2e 100%);
+  box-shadow: 0 0 28px rgba(0, 110, 138, 0.35);
+  animation: planet-float 7s ease-in-out infinite;
+}
+
+@keyframes planet-float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+/* ══════════════════════
+   LOGO — top-left
+   ══════════════════════ */
+.space-logo {
+  position: absolute;
+  top: 24px;
+  left: 28px;
+  z-index: 10;
+}
+
+.space-logo-img {
+  height: 56px;
+  width: auto;
+  /* logo has white bg → make it blend with the dark space bg */
+  filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(0, 168, 204, 0.5));
+  object-fit: contain;
+}
+
+/* ══════════════════════
+   TAGLINE — bottom-left
+   ══════════════════════ */
+.space-tagline {
+  position: absolute;
+  bottom: 48px;
+  left: 40px;
+  z-index: 10;
+  line-height: 1.05;
+}
+
+.tagline-line1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.2vw, 2.9rem);
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.05em;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
+}
+
+.tagline-line2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.2vw, 2.9rem);
+  font-weight: 900;
+  color: var(--zf-bright);
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 32px rgba(0, 168, 204, 0.65);
+}
+
+/* ══════════════════════════════════════
+   FORM PANEL — right side
+   ══════════════════════════════════════ */
+.space-form-panel {
+  position: relative;
+  z-index: 10;
+  width: 420px;
+  margin-right: clamp(32px, 6vw, 100px);
+  padding: 56px 48px 48px;
+  background: transparent;
+}
+
+/* Title */
+.space-form-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 5vw, 4.6rem);
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin: 0 0 10px;
+}
+
+.space-form-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 32px;
+  opacity: 0.85;
+}
+
+/* ── Form ── */
+.space-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.space-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.space-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--input-bg);
+  border: 1.5px solid var(--input-border);
+  border-radius: 10px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
+}
+
+.space-input-wrap:focus-within {
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px rgba(0, 168, 204, 0.14);
+}
+
+.space-input-icon {
+  padding: 0 14px 0 18px;
+  color: rgba(0, 168, 204, 0.6);
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
   flex-shrink: 0;
 }
-.remember-label {
-  font-size: 12px;
-  color: #4b5563;
-}
-.forgot-link {
-  font-size: 12px;
-  color: var(--main-color);
-  font-weight: 500;
-  cursor: pointer;
-  text-decoration: none;
-}
-.forgot-link:hover {
-  text-decoration: underline;
+
+.space-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 15px 14px 15px 0;
 }
 
-/* Sign in button */
-.signin-btn {
+.space-input::placeholder {
+  color: rgba(160, 210, 230, 0.4);
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #00273d inset !important;
+  -webkit-text-fill-color: #fff !important;
+  caret-color: #fff;
+}
+
+.space-pw-toggle {
+  background: transparent;
+  border: none;
+  color: rgba(0, 168, 204, 0.5);
+  padding: 0 16px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+.space-pw-toggle:hover {
+  color: var(--zf-bright);
+}
+
+/* ── Submit button ── */
+.space-submit-btn {
   width: 100%;
-  background: var(--gradient-color);
-  color: #fff;
+  padding: 12px;
+  margin-top: 6px;
   border: none;
   border-radius: 10px;
-  padding: 13px;
-  font-size: 15px;
+  /* Matches --gradient-color: linear-gradient(180deg, #002f4a, #004b63) — rotated 100deg for horizontal feel */
+  background: linear-gradient(100deg, var(--zf-mid) 0%, var(--zf-main) 50%, var(--zf-light) 100%);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
-  letter-spacing: 0.5px;
-  transition: all 0.25s;
-  box-shadow: 0 4px 14px rgba(26, 111, 212, 0.4);
-}
-.signin-btn:hover {
-  box-shadow: 0 8px 22px rgba(26, 111, 212, 0.55);
-  transform: translateY(-2px);
+  letter-spacing: 0.03em;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.15s,
+    box-shadow 0.2s;
+  box-shadow: 0 4px 24px rgba(0, 110, 138, 0.5);
 }
 
-/* Below card */
-.signup-row {
-  font-size: 12px;
-  color: #374151;
+.space-submit-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, var(--zf-main) 0%, var(--zf-bright) 100%);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.space-submit-btn:hover::before {
+  opacity: 1;
+}
+.space-submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 32px rgba(0, 168, 204, 0.4);
+}
+.space-submit-btn:active {
+  transform: translateY(0);
+}
+
+.space-submit-btn span {
+  position: relative;
+}
+
+/* ── Divider ── */
+.space-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 28px 0 18px;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(0, 110, 138, 0.35);
+}
+
+.divider-text {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ── Terms ── */
+.space-terms {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: rgba(160, 210, 230, 0.5);
   text-align: center;
+  margin: 0;
 }
-.signup-link {
-  color: var(--main-color);
-  font-weight: 700;
-  cursor: pointer;
+
+.space-terms-link {
+  color: var(--zf-bright);
   text-decoration: none;
+  font-weight: 500;
 }
-.signup-link:hover {
+
+.space-terms-link:hover {
+  color: #4dd4f0;
   text-decoration: underline;
 }
 
-.login_form_group { margin-bottom: 18px; }
-.login_label {
-  font-size: 12px; font-weight: 500;
-  color: #374151; display: block; margin-bottom: 7px;
-}
-.login_input_wrap { position: relative; }
-.login_input_icon {
-  position: absolute; left: 12px; top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px; color: #666;
-}
-.login_input {
-  width: 100%;
-  padding: 10px 12px 10px 36px;
-  font-size: 13px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: #fff; color: #0f172a;
-  outline: none;
-  transition: border-color .15s, box-shadow .15s;
-}
-.login_input:focus {
-  border-color: var(--main-color);
-  box-shadow: 0 0 0 3px rgba(26, 111, 212, 0.15);
-}
-.login_input::placeholder { color: #666 }
-.login_pw_toggle {
-  position: absolute; right: 12px; top: 50%;
-  transform: translateY(-50%);
-  background: none; border: none;
-  font-size: 14px; color: #374151; cursor: pointer;
-}
+/* ══════════════════════
+   RESPONSIVE
+   ══════════════════════ */
+@media (max-width: 768px) {
+  .space-login-root {
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 90px;
+  }
 
-.login_row_between {
-  display: flex; justify-content: space-between;
-  align-items: center; margin-bottom: 22px;
+  .space-form-panel {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 20px;
+    padding: 40px 28px 36px;
+  }
+
+  .planet-blue {
+    width: 280px;
+    height: 280px;
+    top: -100px;
+    left: -80px;
+  }
+
+  .planet-mid {
+    width: 110px;
+    height: 110px;
+    top: 52%;
+    left: 4%;
+  }
+
+  .planet-small {
+    display: none;
+  }
+  .space-tagline {
+    display: none;
+  }
 }
-.login_remember {
-  display: flex; align-items: center;
-  gap: 6px; font-size: 12px; color: #374151; cursor: pointer;
-}
-.login_remember input { accent-color: var(--main-color); }
-.login_forgot { font-size: 12px; color: var(--main-color); font-weight: 500; text-decoration: none; }
-.login_forgot:hover { text-decoration: underline; }

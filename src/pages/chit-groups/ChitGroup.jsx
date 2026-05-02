@@ -305,8 +305,7 @@ export const ChitGroup = () => {
 
                                   <input type="text" className="form-control" placeholder="Search Agent or Staff" list="referenceList" />
 
-                                  {/* STATIC ERROR (optional UI only) */}
-                                  <div className="invalid-feedback d-block">Select agent or staff</div>
+              
 
                                   {/* STATIC DATALIST */}
                                   <datalist id="referenceList">

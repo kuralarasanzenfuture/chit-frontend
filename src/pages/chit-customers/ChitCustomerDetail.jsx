@@ -39,9 +39,7 @@ export const ChitCustomerDetail = () => {
     },
   ];
 
-  const filteredLedger = selectedGroup
-    ? ledgerData.filter((item) => item.group === selectedGroup)
-    : ledgerData;
+  const filteredLedger = selectedGroup ? ledgerData.filter((item) => item.group === selectedGroup) : ledgerData;
 
   return (
     <div className="user_detail">
@@ -129,10 +127,8 @@ export const ChitCustomerDetail = () => {
                   <h6 className="title">
                     <i className="bi bi-geo-alt-fill"></i>Address
                   </h6>
-                  <p className="text">
-                    145,Vallur , Papparapatti, Penagaram, Dharmapuri , 636809
-                  </p>
-                </div>
+                  <p className="text">145,Vallur , Papparapatti, Penagaram, Dharmapuri , 636809</p>
+                </div> 
               </div>
             </div>
           </div>
@@ -151,8 +147,7 @@ export const ChitCustomerDetail = () => {
                       </span>
                       <div className="d-flex justify-content-between gap-2">
                         <div className="content">
-                          <h5 className="box_text">Total Investment</h5>{" "}
-                          <h4 className="box_title">145000</h4>
+                          <h5 className="box_text">Total Investment</h5> <h4 className="box_title">145000</h4>
                         </div>
                         <div className="box_icon ">
                           <div className="ico icon_batch">
@@ -169,8 +164,7 @@ export const ChitCustomerDetail = () => {
                       </span>
                       <div className="d-flex justify-content-between gap-2">
                         <div className="content">
-                          <h5 className="box_text">Active Groups</h5>{" "}
-                          <h4 className="box_title">3</h4>
+                          <h5 className="box_text">Active Groups</h5> <h4 className="box_title">3</h4>
                         </div>
                         <div className="box_icon ">
                           <div className="ico icon_group">
@@ -187,8 +181,7 @@ export const ChitCustomerDetail = () => {
                       </span>
                       <div className="d-flex justify-content-between gap-2">
                         <div className="content">
-                          <h5 className="box_text">Next Collection Date</h5>{" "}
-                          <h4 className="box_title">14.05.2026</h4>
+                          <h5 className="box_text">Next Collection Date</h5> <h4 className="box_title">14.05.2026</h4>
                         </div>
                         <div className="box_icon ">
                           <div className="ico icon_plan">
@@ -204,51 +197,53 @@ export const ChitCustomerDetail = () => {
           </div>
         </div>
         {/* KYC DETAILS */}
-        {/* ================= KYC DETAILS ================= */}
-        <div className="col-lg-12">
-          <div className="info_box">
-            <h6 className="border-bottom pb-2 mb-3">
-              <i className="bi bi-patch-check-fill me-2"></i>KYC Details
-            </h6>
-            <div className="row gy-4">
-              <div className="col-lg-3">
-                <div className="info_detail">
-                  <h6 className="title">
-                    <i className="bi bi-card-list"></i>ID Proof Type
-                  </h6>
-                  <p className="text">Aadhar</p>
-                </div>
-              </div>
+       {/* ================= KYC DETAILS ================= */}
+<div className="col-lg-12">
+  <div className="info_box">
+    <h6 className="border-bottom pb-2 mb-3">
+      <i className="bi bi-patch-check-fill me-2"></i>KYC Details
+    </h6>
+    <div className="row gy-4">
 
-              <div className="col-lg-3">
-                <div className="info_detail">
-                  <h6 className="title">
-                    <i className="bi bi-person-vcard-fill"></i>ID Proof Number
-                  </h6>
-                  <p className="text">206638826956</p>
-                </div>
-              </div>
-
-              <div className="col-lg-3">
-                <div className="info_detail">
-                  <h6 className="title">
-                    <i className="bi bi-card-list"></i>Address Proof Type
-                  </h6>
-                  <p className="text">Utility Bill</p>
-                </div>
-              </div>
-
-              <div className="col-lg-3">
-                <div className="info_detail">
-                  <h6 className="title">
-                    <i className="bi bi-file-earmark-check-fill"></i>KYC Status
-                  </h6>
-                  <span className="status active">Verified</span>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="col-lg-3">
+        <div className="info_detail">
+          <h6 className="title">
+            <i className="bi bi-card-list"></i>ID Proof Type
+          </h6>
+          <p className="text">Aadhar</p>
         </div>
+      </div>
+
+      <div className="col-lg-3">
+        <div className="info_detail">
+          <h6 className="title">
+            <i className="bi bi-person-vcard-fill"></i>ID Proof Number
+          </h6>
+          <p className="text">206638826956</p>
+        </div>
+      </div>
+
+      <div className="col-lg-3">
+        <div className="info_detail">
+          <h6 className="title">
+            <i className="bi bi-card-list"></i>Address Proof Type
+          </h6>
+          <p className="text">Utility Bill</p>
+        </div>
+      </div>
+
+      <div className="col-lg-3">
+        <div className="info_detail">
+          <h6 className="title">
+            <i className="bi bi-file-earmark-check-fill"></i>KYC Status
+          </h6>
+          <span className="status active">Verified</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
         {/* EXISTING PLAN TABLE */}
         <div className="col-lg-12">
           <div className="wrapper-table-outer">
@@ -268,8 +263,7 @@ export const ChitCustomerDetail = () => {
                 <tr>
                   <td>
                     <div class="user-cell">
-                      <div class="avatar green">GD</div>{" "}
-                      <span>Gold Plan - ₹1,00,000</span>
+                      <div class="avatar green">GD</div> <span>Gold Plan - ₹1,00,000</span>
                     </div>
                   </td>
                   <td>Ramesh / REF001</td>
@@ -295,13 +289,8 @@ export const ChitCustomerDetail = () => {
 
               <select
                 className="form-select w-auto"
-                style={{
-                  backgroundColor: "#efefef",
-                  fontSize: "14px",
-                  minWidth: "150px",
-                }}
-                onChange={(e) => setSelectedGroup(e.target.value)}
-              >
+                style={{ backgroundColor: "#efefef", fontSize: "14px", minWidth: "150px" }}
+                onChange={(e) => setSelectedGroup(e.target.value)}>
                 <option value="">All Groups</option>
                 <option value="Gold Plan">Gold Plan</option>
                 <option value="Silver Plan">Silver Plan</option>
@@ -328,11 +317,7 @@ export const ChitCustomerDetail = () => {
                     <td>₹{item.amount}</td>
                     <td className="text-danger">₹{item.penalty}</td>
                     <td>
-                      <span
-                        className={`status ${item.status === "Paid" ? "active" : "pending"}`}
-                      >
-                        {item.status}
-                      </span>
+                      <span className={`status ${item.status === "Paid" ? "active" : "pending"}`}>{item.status}</span>
                     </td>
                     <td>₹{item.balance}</td>
                   </tr>
