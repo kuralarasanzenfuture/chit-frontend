@@ -59,7 +59,7 @@ export const DashboardLayout = ({ collapsed, setCollapsed }) => {
               <Route path="/gst" element={<GSTDashboard />} />
               <Route path="/agent-staff" element={<AgentStaffLayout />}>
                 <Route index element={<AgentStaffList />} />
-                <Route path="agent-detail" element={<AgentDetail />} />
+                <Route path="agent-detail/:id" element={<AgentDetail />} />
               </Route>
               <Route path="/audit-logs" element={<AuditLogs />} />
             </Routes>
