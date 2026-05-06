@@ -4,10 +4,13 @@ import userImg from "../../assets/images/avatar-1.png";
 import { Link } from "react-router-dom";
 // import { useBranch } from "../BranchContext";
 import "../BranchStyle.css";
+import api from "../../api/api";
+import { toast } from "react-toastify";
 
 export const Topbar = ({ collapsed, setCollapsed }) => {
   // const { activeBranch, setActiveBranch, BRANCHES } = useBranch();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [user, setUser] = useState({});
   const dropdownRef = useRef(null);
 
   /* close on outside click */
@@ -24,6 +27,42 @@ export const Topbar = ({ collapsed, setCollapsed }) => {
   const switchBranch = (branch) => {
     setActiveBranch(branch);
     setDropdownOpen(false);
+  };
+
+  const loadData = async () => {
+    try {
+      const res = await api.get("/auth/getmyprofile");
+      setUser(res.data);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const AVATAR_COLORS = [
+    { bg: "#e0f2fe", color: "#0284c7" }, // blue
+    { bg: "#fef3c7", color: "#d97706" }, // amber
+    { bg: "#dcfce7", color: "#16a34a" }, // green
+    { bg: "#fee2e2", color: "#dc2626" }, // red
+    { bg: "#ede9fe", color: "#7c3aed" }, // purple
+    { bg: "#fce7f3", color: "#db2777" }, // pink
+  ];
+
+  const getAvatarColor = (index) => {
+    return AVATAR_COLORS[index % AVATAR_COLORS.length];
+  };
+
+  const getInitials = (name) => {
+    if (!name) return ""; // 🛡️ prevent crash
+
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
   };
 
   return (
@@ -56,7 +95,6 @@ export const Topbar = ({ collapsed, setCollapsed }) => {
         </div>
 
         <div className="topbar-icons">
-       
           {/* <div className="tb_branch_wrap" ref={dropdownRef}>
             <button className="tb_branch_btn" onClick={() => setDropdownOpen((o) => !o)} title="Switch Branch">
               <span className="tb_branch_dot" />
@@ -114,17 +152,25 @@ export const Topbar = ({ collapsed, setCollapsed }) => {
           </Link>
 
           {/* Profile */}
-          <div className="profile-bg">
+          <Link to="/edit-profile" className="profile-bg">
             <div className="profile-section">
-              <Link>
-                <img src={userImg} alt="Profile" className="profile-pic" />
-              </Link>
+              {user && (
+                <div
+                  className="profile_avatar"
+                  style={{
+                    background: getAvatarColor(0).bg,
+                    color: getAvatarColor(0).color,
+                    border: `1px solid ${getAvatarColor(0).color}`,
+                  }}>
+                  {getInitials(user.name)}
+                </div>
+              )}
             </div>
             <div className="content">
-              <p className="mb-0">Jhon Chart</p>
-              <small>Admin</small>
+              <p className="mb-0">{user.name}</p>
+              <small>{user.role}</small>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     </div>

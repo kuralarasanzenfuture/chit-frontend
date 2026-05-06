@@ -151,11 +151,7 @@ import React, { useState } from "react";
 import "./AgentStaff.css";
 import { AgentStaffTable } from "./table/AgentStaffTable";
 import { useDispatch } from "react-redux";
-import {
-  createStaff,
-  updateStaff,
-  fetchStaff,
-} from "../../slices/agentAndStaff";
+import { createStaff, updateStaff, fetchStaff } from "../../slices/agentAndStaff";
 import { toast } from "react-toastify";
 
 export const AgentStaffList = () => {
@@ -228,13 +224,10 @@ export const AgentStaffList = () => {
 
     if (!formInputs.refrence_name) newErrors.refrence_name = "Name is required";
 
-    if (!formInputs.refrence_phone_number)
-      newErrors.refrence_phone_number = "Phone is required";
-    else if (!/^\d{10}$/.test(formInputs.refrence_phone_number))
-      newErrors.refrence_phone_number = "Enter valid 10-digit phone";
+    if (!formInputs.refrence_phone_number) newErrors.refrence_phone_number = "Phone is required";
+    else if (!/^\d{10}$/.test(formInputs.refrence_phone_number)) newErrors.refrence_phone_number = "Enter valid 10-digit phone";
 
-    if (!formInputs.terms_conditions)
-      newErrors.terms_conditions = "Accept terms";
+    if (!formInputs.terms_conditions) newErrors.terms_conditions = "Accept terms";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -265,12 +258,7 @@ export const AgentStaffList = () => {
         })
         .catch((err) => {
           console.error("❌ Full Error edit:", err);
-          const errorMessage =
-            err ||
-            err?.response?.data?.message ||
-            err?.data?.message ||
-            err?.message ||
-            "Update failed ❌";
+          const errorMessage = err || err?.response?.data?.message || err?.data?.message || err?.message || "Update failed ❌";
 
           toast.error(errorMessage);
         });
@@ -284,12 +272,7 @@ export const AgentStaffList = () => {
         })
         .catch((err) => {
           console.error("❌ Full Error create:", err);
-          const errorMessage =
-            err ||
-            err?.response?.data?.message ||
-            err?.data?.message ||
-            err?.message ||
-            "Create failed ❌";
+          const errorMessage = err || err?.response?.data?.message || err?.data?.message || err?.message || "Create failed ❌";
 
           toast.error(errorMessage);
         });
@@ -320,9 +303,11 @@ export const AgentStaffList = () => {
   return (
     <div className="agent_staff">
       {/* BUTTON */}
-
-      
-      <div className="text-end">
+      <div className="wrapper_header">
+        <div>
+          <h5 className="header_title">Agent / Staff</h5>
+          <p className="header_text">Manage agents and staff, track performance, and streamline daily operations.</p>
+        </div>
         <button className="btn main-btn" onClick={openModal}>
           <i className="bi bi-person-plus"></i> Add Agent / Staff
         </button>
@@ -340,9 +325,7 @@ export const AgentStaffList = () => {
             <div className="modal-dialog modal_form modal-dialog-centered modal-lg">
               <div className="modal-content">
                 <div className="modal-header form_title ">
-                  <h1 className="title ">
-                    {editId ? "Update Agent / Staff" : "Add Agent / Staff"}
-                  </h1>
+                  <h1 className="title ">{editId ? "Update Agent / Staff" : "Add Agent / Staff"}</h1>
                   <button className="btn-close" onClick={closeModal}></button>
                 </div>
 
@@ -367,9 +350,7 @@ export const AgentStaffList = () => {
                         className="ms-3"
                       />{" "}
                       Staff
-                      {errors.booking_role && (
-                        <div className="text-danger">{errors.booking_role}</div>
-                      )}
+                      {errors.booking_role && <div className="text-danger">{errors.booking_role}</div>}
                     </div>
 
                     {/* INPUTS */}
@@ -381,16 +362,10 @@ export const AgentStaffList = () => {
                           name="refrence_name"
                           value={formInputs.refrence_name}
                           onChange={handleInputChange}
-                          className={`form-control ${
-                            errors.refrence_name ? "is-invalid" : ""
-                          }`}
+                          className={`form-control ${errors.refrence_name ? "is-invalid" : ""}`}
                           placeholder="Enter Name"
                         />
-                        {errors.refrence_name && (
-                          <small className="text-danger">
-                            {errors.refrence_name}
-                          </small>
-                        )}
+                        {errors.refrence_name && <small className="text-danger">{errors.refrence_name}</small>}
                       </div>
 
                       <div className="col-md-6">
@@ -402,26 +377,15 @@ export const AgentStaffList = () => {
                           onChange={handlePhoneChange}
                           maxLength={10}
                           inputMode="numeric"
-                          className={`form-control ${
-                            errors.refrence_phone_number ? "is-invalid" : ""
-                          }`}
+                          className={`form-control ${errors.refrence_phone_number ? "is-invalid" : ""}`}
                           placeholder="Enter Phone"
                         />
-                        {errors.refrence_phone_number && (
-                          <small className="text-danger">
-                            {errors.refrence_phone_number}
-                          </small>
-                        )}
+                        {errors.refrence_phone_number && <small className="text-danger">{errors.refrence_phone_number}</small>}
                       </div>
                       {editId && (
                         <div className="col-md-6">
                           <label className="form-label">Status</label>
-                          <select
-                            className="form-select"
-                            name="status"
-                            value={formInputs.status}
-                            onChange={handleInputChange}
-                          >
+                          <select className="form-select" name="status" value={formInputs.status} onChange={handleInputChange}>
                             <option value="ACTIVE">Active</option>
                             <option value="INACTIVE">Inactive</option>
                           </select>
@@ -448,27 +412,15 @@ export const AgentStaffList = () => {
                           }}
                         />{" "}
                         Accept Terms
-                        {errors.terms_conditions && (
-                          <div className="text-danger">
-                            {errors.terms_conditions}
-                          </div>
-                        )}
+                        {errors.terms_conditions && <div className="text-danger">{errors.terms_conditions}</div>}
                       </div>
 
                       <div>
-                        <button
-                          type="button"
-                          className="btn light-btn me-2"
-                          onClick={closeModal}
-                        >
+                        <button type="button" className="btn light-btn me-2" onClick={closeModal}>
                           Cancel
                         </button>
 
-                        <button
-                          type="button"
-                          className="btn main-btn"
-                          onClick={handleSubmit}
-                        >
+                        <button type="button" className="btn main-btn" onClick={handleSubmit}>
                           {editId ? "Update" : "Submit"}
                         </button>
                       </div>

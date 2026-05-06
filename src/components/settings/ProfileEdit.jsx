@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ProfileEdit.css";
+import api from "../../api/api";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import { useBranch } from "../BranchContext";
 
 const AUDIT_ITEMS = [
@@ -39,6 +42,7 @@ export const ProfileEdit = () => {
   // const { activeBranch, setActiveBranch, BRANCHES } = useBranch();
 
   // const [branches, setBranches] = useState(BRANCHES);
+  const [user, setUser] = useState({});
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newBranch, setNewBranch] = useState({
     name: "",
@@ -47,6 +51,80 @@ export const ProfileEdit = () => {
     branchId: "",
   });
   const [formError, setFormError] = useState("");
+  const [showPassword, setShowPassword] = useState({
+    old: false,
+    new: false,
+    confirm: false,
+  });
+  const [errors, setErrors] = useState({});
+  const [password, setPassword] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const handlePassword = (e) => {
+    let { name, value } = e.target;
+
+    setPassword((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
+
+  const validatePassword = () => {
+    let errors = {};
+
+    // OLD PASSWORD
+    if (!password.oldPassword.trim()) {
+      errors.oldPassword = "Old password is required";
+    }
+
+    // NEW PASSWORD
+    if (!password.newPassword.trim()) {
+      errors.newPassword = "New password is required";
+    } else if (password.newPassword.length < 6) {
+      errors.newPassword = "Password must be at least 6 characters";
+    }
+
+    // CONFIRM PASSWORD
+    if (!password.confirmPassword.trim()) {
+      errors.confirmPassword = "Please confirm your password";
+    } else if (password.newPassword !== password.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+
+    setErrors(errors);
+
+    return Object.keys(errors).length === 0;
+  };
+
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validatePassword()) return;
+
+    try {
+      const payload = {
+        oldPassword: password.oldPassword,
+        newPassword: password.newPassword,
+      };
+
+      await api.put("/auth/change-password", payload);
+
+      toast.success("Password updated successfully");
+
+      setPassword({
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to update password");
+    }
+  };
 
   const handleCreateBranch = () => {
     if (!newBranch.name.trim()) {
@@ -76,6 +154,29 @@ export const ProfileEdit = () => {
     setFormError("");
   };
 
+  const loadData = async () => {
+    try {
+      const res = await api.get("/auth/getmyprofile");
+      setUser(res.data);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const getInitials = (name) => {
+    if (!name) return ""; // 🛡️ prevent crash
+
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
+  };
+
   return (
     <>
       {/* PAGE HEADER */}
@@ -94,11 +195,11 @@ export const ProfileEdit = () => {
             <div className="ps_profile_card mb-3">
               <div className="ps_profile_banner"></div>
               <div className="ps_profile_photo_wrap">
-                <div className="ps_profile_photo">AK</div>
+                <div className="ps_profile_photo">{getInitials(user.name)}</div>
               </div>
               <div className="ps_profile_body">
-                <h5 className="ps_profile_name">Arun Kumar</h5>
-                <span className="ps_master_badge">Master Administrator</span>
+                <h5 className="ps_profile_name">{user.name}</h5>
+                <span className="ps_master_badge">{user.role}</span>
               </div>
             </div>
 
@@ -114,24 +215,90 @@ export const ProfileEdit = () => {
                 </div>
               </div>
 
-              <div className="row g-3">
+              <form className="row g-3" onSubmit={handlePasswordSubmit}>
                 <div className="col-12">
+                  <label className="ps_field_label">Old Password</label>
                   <div className="pe_field">
-                    <label className="ps_field_label">New Password</label>
-                    <input className="form-control ps_input" type="password" placeholder="Enter new password" />
+                    <input
+                      className="form-control ps_input"
+                      type={showPassword.old ? "text" : "password"}
+                      value={password.oldPassword}
+                      onChange={handlePassword}
+                      placeholder="Enter new password"
+                      name="oldPassword"
+                    />
+                    <button
+                      type="button"
+                      className="ps_score_toggle"
+                      onClick={() =>
+                        setShowPassword((prev) => ({
+                          ...prev,
+                          old: !prev.old,
+                        }))
+                      }>
+                      <i className={`bi ${showPassword.old ? "bi-eye-slash" : "bi-eye"}`} />
+                    </button>
                   </div>
+                  {errors.oldPassword && <small className="text-danger">{errors.oldPassword}</small>}
                 </div>
                 <div className="col-12">
+                  <label className="ps_field_label">New Password</label>
                   <div className="pe_field">
-                    <label className="ps_field_label">Confirm New Password</label>
-                    <input className="form-control ps_input" type="password" placeholder="Repeat new password" />
+                    <input
+                      className="form-control ps_input"
+                      type={showPassword.new ? "text" : "password"}
+                      value={password.newPassword}
+                      onChange={handlePassword}
+                      placeholder="Enter new password"
+                      name="newPassword"
+                    />
+                    <button
+                      type="button"
+                      className="ps_score_toggle"
+                      onClick={() =>
+                        setShowPassword((prev) => ({
+                          ...prev,
+                          new: !prev.new,
+                        }))
+                      }>
+                      <i className={`bi ${showPassword.new ? "bi-eye-slash" : "bi-eye"}`} />
+                    </button>
+                  </div>
+                  {errors.newPassword && <small className="text-danger">{errors.newPassword}</small>}
+                </div>
+                <div className="col-12">
+                  <label className="ps_field_label">Confirm New Password</label>
+                  <div className="pe_field">
+                    <input
+                      className="form-control ps_input"
+                      type={showPassword.confirm ? "text" : "password"}
+                      value={password.confirmPassword}
+                      onChange={handlePassword}
+                      placeholder="Repeat new password"
+                      name="confirmPassword"
+                    />
+                    <button
+                      type="button"
+                      className="ps_score_toggle"
+                      onClick={() =>
+                        setShowPassword((prev) => ({
+                          ...prev,
+                          confirm: !prev.confirm,
+                        }))
+                      }>
+                      <i className={`bi ${showPassword.confirm ? "bi-eye-slash" : "bi-eye"}`} />
+                    </button>
+                  </div>
+                  {errors.confirmPassword && <small className="text-danger">{errors.confirmPassword}</small>}
+                </div>
+                <div className="col-12">
+                  <div className="">
+                    <button type="submit" className="btn main-btn">
+                      Change Password
+                    </button>
                   </div>
                 </div>
-              </div>
-
-              <div className="mt-3">
-                <button className="btn main-btn">Change Password</button>
-              </div>
+              </form>
             </div>
           </div>
 
@@ -216,7 +383,6 @@ export const ProfileEdit = () => {
         </div>
       </div>
 
-     
       {/* {showCreateModal && (
         <div className="modal fade show d-block" style={{ background: "rgba(0,0,0,0.45)" }} onClick={handleModalClose}>
           <div className="modal-dialog modal-dialog-centered" onClick={(e) => e.stopPropagation()}>
@@ -286,6 +452,8 @@ export const ProfileEdit = () => {
           </div>
         </div>
       )} */}
+
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover theme="light" />
     </>
   );
 };

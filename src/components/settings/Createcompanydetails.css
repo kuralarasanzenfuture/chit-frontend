@@ -1,0 +1,323 @@
+/* ═══════════════════════════════════════════════════════
+   CreateCompanyDetails.css  —  Plain & Premium
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Variables ───────────────────────────────────────── */
+:root {
+  --gradient-color: linear-gradient(180deg, #002f4a, #004b63);
+  --main-color: #004b63;
+  --main-dark: #002f4a;
+  --main-soft: rgba(0, 75, 99, 0.06);
+  --main-mid: rgba(0, 75, 99, 0.12);
+  --main-glow: rgba(0, 75, 99, 0.2);
+
+  --surface: #ffffff;
+  --surface-hover: #f8fbfc;
+  --border: #e2eaed;
+  --border-strong: #c8d8de;
+
+  --text-heading: #0b1e28;
+  --text-body: #1e3a47;
+  --text-muted: #6b8fa0;
+  --text-label: #5a7f92;
+
+  --shadow-card: 0 1px 4px rgba(0, 47, 74, 0.06), 0 6px 24px rgba(0, 47, 74, 0.08);
+  --shadow-hover: 0 2px 8px rgba(0, 47, 74, 0.07), 0 12px 36px rgba(0, 47, 74, 0.11);
+
+  --radius: 14px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+}
+
+/* ── Toast ───────────────────────────────────────────── */
+.ccd_toast {
+  position: fixed;
+  top: 22px;
+  right: 26px;
+  z-index: 9999;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  box-shadow: var(--shadow-hover);
+  animation: ccd_slide_in 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.ccd_toast--success {
+  background: linear-gradient(135deg, #0e6b3c, #1a9e5a);
+}
+.ccd_toast--danger {
+  background: var(--gradient-color);
+}
+
+@keyframes ccd_slide_in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   DETAIL CARD
+   ══════════════════════════════════════════════════════ */
+.ccd_detail_card {
+  padding: 0 !important;
+  overflow: hidden;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-card) !important;
+  background: var(--surface) !important;
+  font-family: var(--font-body);
+  transition: box-shadow 0.28s;
+  /* slim gradient top bar */
+  border-top: 3px solid transparent !important;
+  background-clip: padding-box !important;
+  position: relative;
+}
+.ccd_detail_card::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-color);
+  border-radius: var(--radius) var(--radius) 0 0;
+  z-index: 1;
+}
+.ccd_detail_card:hover {
+  box-shadow: var(--shadow-hover) !important;
+}
+
+/* ── Card header ─────────────────────────────────────── */
+.ccd_card_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 26px 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.ccd_company_name {
+  font-size: 1.12rem;
+  font-weight: 500;
+  /* gradient text */
+  background: var(--gradient-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.15em;
+}
+
+/* ── Edit / Delete buttons ───────────────────────────── */
+.ccd_card_header .btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  border-radius: var(--radius-xs) !important;
+  font-size: 0.78rem;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s,
+    transform 0.14s;
+}
+
+/* ── Field rows ──────────────────────────────────────── */
+.ccd_field_row {
+  border-top: 1px solid var(--border);
+  transition: background 0.14s;
+}
+.ccd_field_row:hover {
+  background: var(--surface-hover);
+}
+
+.ccd_field_grid {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  padding: 13px 26px;
+}
+
+.ccd_field_label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--main-color);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  white-space: nowrap;
+  min-width: 195px;
+  padding-right: 20px;
+  padding-top: 3px;
+  flex-shrink: 0;
+  /* left dot accent */
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.ccd_field_label::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--main-color);
+  opacity: 0.4;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.ccd_field_value {
+  font-size: 0.88rem;
+  color: var(--text-body);
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+/* ── Empty state ─────────────────────────────────────── */
+.ccd_empty_state {
+  text-align: center;
+  padding: 60px 24px;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text-muted);
+}
+.ccd_empty_icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.35;
+}
+.ccd_empty_text {
+  font-size: 0.87rem;
+  font-family: var(--font-body);
+  font-weight: 300;
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════
+   MODAL
+   ══════════════════════════════════════════════════════ */
+.modal-form .modal-content {
+  border: 1px solid var(--border);
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-hover);
+  overflow: hidden;
+  font-family: var(--font-body);
+  /* gradient top bar on modal too */
+  border-top: 3px solid transparent !important;
+  background-clip: padding-box !important;
+  position: relative;
+}
+.modal-form .modal-content::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-color);
+  z-index: 1;
+}
+
+.modal-form .modal-header.form_title {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 26px;
+}
+.modal-form .modal-header.form_title .title {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 500;
+  background: var(--gradient-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+.modal-form .btn-close {
+  opacity: 0.45;
+  transition: opacity 0.15s;
+}
+.modal-form .btn-close:hover {
+  opacity: 0.85;
+}
+
+.modal-form .modal-body.form_content {
+  padding: 24px 26px 8px;
+  background: var(--surface);
+}
+.modal-form .modal-footer {
+  padding: 14px 26px 20px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  gap: 10px;
+}
+
+/* Form fields */
+.modal-form .form-label {
+  font-size: 0.71rem;
+  font-weight: 600;
+  color: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 6px;
+}
+.modal-form .form-control {
+  font-family: var(--font-body);
+  font-size: 0.87rem;
+  font-weight: 300;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  padding: 9px 13px;
+  color: var(--text-body);
+  background: var(--surface);
+  transition:
+    border-color 0.18s,
+    box-shadow 0.18s;
+}
+.modal-form .form-control:focus {
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 3px var(--main-soft);
+  outline: none;
+}
+.modal-form .form-control::placeholder {
+  color: #a8bec9;
+  font-weight: 300;
+  font-size: 0.84rem;
+}
+.modal-form textarea.form-control {
+  min-height: 76px;
+  resize: vertical;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 600px) {
+  .ccd_field_grid {
+    flex-direction: column;
+    gap: 3px;
+    padding: 12px 18px;
+  }
+  .ccd_field_label {
+    min-width: unset;
+    padding-right: 0;
+  }
+  .ccd_card_header {
+    padding: 16px 18px 14px;
+  }
+}

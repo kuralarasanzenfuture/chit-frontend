@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 // import { BranchProvider } from "./components/BranchContext.jsx";
 import "react-tooltip/dist/react-tooltip.css";
-import { Store } from "./store/Store.jsx";
+import { Store } from "./store/Store.js";
 import { Provider } from "react-redux";
 
 createRoot(document.getElementById("root")).render(

@@ -78,7 +78,7 @@
 //     </div>
 //   );
 // };
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStaff, deleteStaff } from "../../../slices/agentAndStaff";
 import { Link } from "react-router-dom";
@@ -86,8 +86,15 @@ import { toast } from "react-toastify";
 
 export const AgentStaffTable = ({ onEdit }) => {
   const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { staff = [] } = useSelector((state) => state.agentAndStaff || {});
+
+  const filteredData = staff.filter((item) => {
+    const term = searchTerm.toLowerCase();
+
+    return item.name?.toLowerCase().includes(term) || item.phoneNumber?.includes(term) || item.referenceDetail?.includes(term);
+  });
 
   useEffect(() => {
     dispatch(fetchStaff());
@@ -154,6 +161,28 @@ export const AgentStaffTable = ({ onEdit }) => {
 
   return (
     <div className="wrapper-table-outer mt-4">
+      <div className="table-header d-flex justify-content-between align-items-center">
+        <h6>
+          <i className="fi fi-rs-users me-2"></i>Agent List
+        </h6>
+
+        <div className="d-flex align-items-center gap-3">
+          <div className="search-item">
+            <div className="search-box ">
+              <input
+                className="search-input"
+                placeholder="Search By Name or ID..."
+                type="text"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                }}
+              />
+              <i className="bi bi-search search-icon"></i>
+            </div>
+          </div>
+        </div>
+      </div>
       <table className="premium_table table-striped">
         <thead>
           <tr>
@@ -169,7 +198,7 @@ export const AgentStaffTable = ({ onEdit }) => {
         </thead>
 
         <tbody>
-          {(Array.isArray(staff) ? staff : []).map((item, index) => (
+          {(Array.isArray(filteredData) ? filteredData : []).map((item, index) => (
             <tr key={item.id || index}>
               <td>{index + 1}</td>
 
@@ -186,11 +215,7 @@ export const AgentStaffTable = ({ onEdit }) => {
               <td>{formatDate(item.lastReferal)}</td>
 
               <td className="hours-cell">
-                <span
-                  className={`badge rounded-pill bg-${getStatusColor(
-                    item.status,
-                  )} bg-opacity-25 text-${getStatusColor(item.status)}`}
-                >
+                <span className={`badge rounded-pill bg-${getStatusColor(item.status)} bg-opacity-25 text-${getStatusColor(item.status)}`}>
                   {item.status}
                 </span>
               </td>
@@ -201,17 +226,11 @@ export const AgentStaffTable = ({ onEdit }) => {
                 </Link>
 
                 {/* ✅ EDIT BUTTON FIX */}
-                <button
-                  className="btn btn-sm bg-warning-subtle text-warning me-2 border border-warning-subtle"
-                  onClick={() => onEdit(item)}
-                >
+                <button className="btn btn-sm bg-warning-subtle text-warning me-2 border border-warning-subtle" onClick={() => onEdit(item)}>
                   <i className="bi bi-pencil"></i>
                 </button>
 
-                <button
-                  className="btn btn-sm bg-danger-subtle text-danger border border-danger-subtle"
-                  onClick={() => handleDelete(item.id)}
-                >
+                <button className="btn btn-sm bg-danger-subtle text-danger border border-danger-subtle" onClick={() => handleDelete(item.id)}>
                   <i className="bi bi-trash"></i>
                 </button>
               </td>

@@ -1,122 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import avatar from "../../assets/images/avatar-1.png";
 import { toast } from "react-toastify";
 import api from "../../api/api";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser, deleteUser, setExsistingUser, setLoading, setUser, updateUser } from "../../slices/CustomerSlice";
 
-const activityData = [
-  {
-    id: 1,
-    name: "Arun Kumar",
-    phone: "9876543210",
-    aadhar: "1234 5678 9012",
-    pan: "ABCDE1234F",
-    address: "12, Anna Nagar, Madurai",
-    nomineeName: "Lakshmi",
-    nomineePhone: "9876500001",
-    kycStatus: "Verified",
-  },
-  {
-    id: 2,
-    name: "Ravi Kumar",
-    phone: "9876543211",
-    aadhar: "2234 5678 9012",
-    pan: "BCDEF2345G",
-    address: "45, KK Nagar, Madurai",
-    nomineeName: "Suresh",
-    nomineePhone: "9876500002",
-  },
-  {
-    id: 3,
-    name: "Suresh Babu",
-    phone: "9876543212",
-    aadhar: "3234 5678 9012",
-    pan: "CDEFG3456H",
-    address: "78, Melur Road, Madurai",
-    nomineeName: "Priya",
-    nomineePhone: "9876500003",
-  },
-  {
-    id: 4,
-    name: "Vijay Raj",
-    phone: "9876543213",
-    aadhar: "4234 5678 9012",
-    pan: "DEFGH4567I",
-    address: "9, Thirunagar, Madurai",
-    nomineeName: "Kavitha",
-    nomineePhone: "9876500004",
-  },
-  {
-    id: 5,
-    name: "Mani Selvam",
-    phone: "9876543214",
-    aadhar: "5234 5678 9012",
-    pan: "EFGHI5678J",
-    address: "21, Villapuram, Madurai",
-    nomineeName: "Selvi",
-    nomineePhone: "9876500005",
-  },
-  {
-    id: 6,
-    name: "Karthik",
-    phone: "9876543215",
-    aadhar: "6234 5678 9012",
-    pan: "FGHIJ6789K",
-    address: "3, Alagarkoil Road, Madurai",
-    nomineeName: "Ramesh",
-    nomineePhone: "9876500006",
-  },
-  {
-    id: 7,
-    name: "Prakash",
-    phone: "9876543216",
-    aadhar: "7234 5678 9012",
-    pan: "GHIJK7890L",
-    address: "56, Teppakulam, Madurai",
-    nomineeName: "Anitha",
-    nomineePhone: "9876500007",
-  },
-  {
-    id: 8,
-    name: "Dinesh",
-    phone: "9876543217",
-    aadhar: "8234 5678 9012",
-    pan: "HIJKL8901M",
-    address: "11, Avaniyapuram, Madurai",
-    nomineeName: "Deepa",
-    nomineePhone: "9876500008",
-  },
-  {
-    id: 9,
-    name: "Gokul",
-    phone: "9876543218",
-    aadhar: "9234 5678 9012",
-    pan: "IJKLM9012N",
-    address: "88, Mattuthavani, Madurai",
-    nomineeName: "Kumar",
-    nomineePhone: "9876500009",
-  },
-  {
-    id: 10,
-    name: "Senthil",
-    phone: "9876543219",
-    aadhar: "1034 5678 9012",
-    pan: "JKLMN0123O",
-    address: "14, Pasumalai, Madurai",
-    nomineeName: "Meena",
-    nomineePhone: "9876500010",
-  },
-];
 const colors = ["#22c55e", "#3b82f6", "#f59e0b", "#ef4444", "#6366f1"];
 
 const getColor = (index) => colors[index % colors.length];
 
-const getInitials = (name) =>
-  name
+const BASE_URL = `http://localhost:8080`;
+
+const getInitials = (name) => {
+  if (!name) return ""; // 🛡️ prevent crash
+
+  return name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase();
+};
 
 const initialValue = {
   customerEmail: "",
@@ -140,7 +44,34 @@ export const ChitCustomer = () => {
   const [formData, setFormData] = useState(initialValue);
   const [errors, setErrors] = useState({});
 
+  const dispatch = useDispatch();
+  const activityData = useSelector((state) => state.customer.user);
+  const exsistingUser = useSelector((state) => state.customer.exsistingUser);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 10;
+
+  const loadData = async () => {
+    try {
+      const res = await api.get("/getallcustomers");
+      dispatch(setUser(res.data));
+    } catch (err) {
+      const setErr = err?.response?.data?.message || err.message || "Customer Add Failed";
+      toast.error(setErr);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const [files, setFiles] = useState({
+    photoFile: null,
+    idProofFile: null,
+    addressProofFile: null,
+  });
+
+  const [existingFiles, setExistingFiles] = useState({
     photoFile: null,
     idProofFile: null,
     addressProofFile: null,
@@ -148,55 +79,111 @@ export const ChitCustomer = () => {
 
   const [preview, setPreview] = useState(null);
 
+  const sortedData = [...activityData].sort((a, b) => b.id - a.id);
+  // OR use createdAt if available
+  // const sortedData = [...activityData].sort(
+  //   (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  // );
+
+  // ================= SEARCH =================
+  const filteredData = sortedData.filter((item) => {
+    const term = searchTerm.toLowerCase();
+
+    return item.customerName?.toLowerCase().includes(term) || item.customerPhone?.includes(term) || item.id?.toString().includes(term);
+  });
+
+  // ================= PAGINATION =================
+  const totalRecords = filteredData.length;
+  const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+  const startIndex = (currentPage - 1) * recordsPerPage;
+  const endIndex = startIndex + recordsPerPage;
+
+  const paginatedData = filteredData.slice(startIndex, endIndex);
+
+  // ================= HANDLE PAGE =================
+  const goToPage = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+  };
+
   // ================= VALIDATION =================
   const validate = () => {
     let newErrors = {};
 
-    // Full Name
-    if (!formData.customerName) {
-      newErrors.full_name = "Please Enter the Name";
+    // NAME (required)
+    if (!formData.customerName.trim()) {
+      newErrors.customerName = "Please enter the name";
     }
 
-    // Phone
-    if (!formData.customerPhone) {
-      newErrors.phone = "Please Enter Your Phone Number";
-    } else if (!/^[6-9]\d{9}$/.test(formData.customerPhone)) {
-      newErrors.phone = "Enter valid 10 digit phone";
+    // PHONE (required)
+    if (!formData.customerPhone.trim()) {
+      newErrors.customerPhone = "Please enter phone number";
+    } else if (!/^[6-9]\d{9}$/.test(formData.customerPhone.trim())) {
+      newErrors.customerPhone = "Enter valid 10 digit mobile number";
     }
 
-    // PAN
-    if (!formData.panNumber) {
-      newErrors.pan_number = "Please Enter PAN Number";
-    } else if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(formData.panNumber)) {
-      newErrors.pan_number = "PAN format: ABCDE1234F";
+    // EMAIL (required)
+    if (formData.customerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.customerEmail.trim())) {
+      newErrors.customerEmail = "Invalid email address";
     }
 
-    // Aadhar
-    if (!formData.aadharNumber) {
-      newErrors.aadhar_number = "Please Enter Aadhar Number";
-    } else if (!/^\d{12}$/.test(formData.aadharNumber)) {
-      newErrors.aadhar_number = "Aadhaar must be 12 digits";
+    // ✅ PINCODE (optional)
+    if (formData.pincode && !/^[1-9][0-9]{5}$/.test(formData.pincode.trim())) {
+      newErrors.pincode = "Enter valid 6 digit pincode";
     }
 
-    // Files
-    // Files (only required for CREATE)
-    // if (!editPlanId) {
-    //   if (!formData.aadhar_front_image) {
-    //     newErrors.aadhar_front_image = "Please Upload Aadhar Front";
-    //   }
-    //   if (!formData.aadhar_back_image) {
-    //     newErrors.aadhar_back_image = "Please Upload Aadhar Back";
-    //   }
-    //   if (!formData.pan_card_image) {
-    //     newErrors.pan_card_image = "Please Upload PAN Card";
-    //   }
-    //   if (!formData.bank_passbook_image) {
-    //     newErrors.bank_passbook_image = "Please Upload Passbook";
-    //   }
-    // }
+    // ✅ PAN (optional)
+    if (formData.panNumber && !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(formData.panNumber.trim().toUpperCase())) {
+      newErrors.panNumber = "PAN format: ABCDE1234F";
+    }
+
+    // ✅ AADHAR (optional)
+    if (formData.aadharNumber && !/^\d{12}$/.test(formData.aadharNumber.trim())) {
+      newErrors.aadharNumber = "Aadhaar must be 12 digits";
+    }
+
+    // ID PROOF (optional)
+    // ✅ ID PROOF (optional but conditional validation)
+    if (formData.idProofNumber.trim()) {
+      const value = formData.idProofNumber.trim();
+
+      // ❗ Type must be selected if number entered
+      if (!formData.idProofType) {
+        newErrors.idProofNumber = "Please select ID proof type";
+      } else {
+        switch (formData.idProofType) {
+          case "AADHAR":
+            if (!/^\d{12}$/.test(value)) {
+              newErrors.idProofNumber = "Aadhaar must be 12 digits";
+            }
+            break;
+
+          case "PAN":
+            if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(value.toUpperCase())) {
+              newErrors.idProofNumber = "PAN format: ABCDE1234F";
+            }
+            break;
+
+          case "VOTER_ID":
+            if (!/^[A-Z]{3}[0-9]{7}$/.test(value.toUpperCase())) {
+              newErrors.idProofNumber = "Voter ID format: ABC1234567";
+            }
+            break;
+
+          case "DL":
+            if (value.length < 8) {
+              newErrors.idProofNumber = "Enter valid Driving License number";
+            }
+            break;
+
+          default:
+            break;
+        }
+      }
+    }
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
@@ -238,14 +225,25 @@ export const ChitCustomer = () => {
     }
 
     // ✅ Save file
-    setFiles((prev) => ({
-      ...prev,
-      [name]: file,
-    }));
+    setFiles((prev) => {
+      const updated = { ...prev, [name]: file };
+      console.log("FILES STATE:", updated);
+      return updated;
+    });
   };
 
   const handleInput = (e) => {
     let { name, value } = e.target;
+
+    // Reset ID number when type changes
+    if (name === "idProofType") {
+      setFormData((prev) => ({
+        ...prev,
+        idProofType: value,
+        idProofNumber: "", // reset
+      }));
+      return;
+    }
 
     setFormData((prev) => {
       return {
@@ -258,24 +256,56 @@ export const ChitCustomer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!validate()) return;
+
+    dispatch(setLoading());
+
     const data = new FormData();
 
-    // append text
     Object.keys(formData).forEach((key) => {
-      data.append(key, formData[key]);
-    });
-
-    // append files
-    Object.keys(files).forEach((key) => {
-      if (files[key]) {
-        data.append(key, files[key]);
+      if (formData[key] !== "" && formData[key] !== null) {
+        data.append(key, formData[key]);
       }
     });
 
-    try {
-      await api.post("/api/customer", data); // ✅ FIXED URL
+    if (files.photoFile instanceof File) {
+      data.append("photoFile", files.photoFile);
+    }
 
-      toast.success("Customer Added Successfully");
+    if (files.idProofFile instanceof File) {
+      data.append("idProofFile", files.idProofFile);
+    }
+
+    if (files.addressProofFile instanceof File) {
+      data.append("addressProofFile", files.addressProofFile);
+    }
+
+    try {
+      let response;
+
+      if (exsistingUser) {
+        response = await api.put(`/customer-id/${exsistingUser.id}`, data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        dispatch(
+          updateUser({
+            ...formData,
+            id: exsistingUser.id,
+            photoFile: preview,
+          }),
+        );
+
+        toast.success("User Updated");
+        dispatch(setExsistingUser(null));
+      } else {
+        response = await api.post("/customer", data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        dispatch(addUser(response.data));
+        toast.success("User Added");
+      }
 
       setFormData(initialValue);
       setFiles({
@@ -284,11 +314,11 @@ export const ChitCustomer = () => {
         addressProofFile: null,
       });
       setPreview(null);
-
+      loadData();
       closeModal();
     } catch (err) {
-      console.error(err);
-      toast.error("Upload failed");
+      console.log("ERROR FULL:", err.response);
+      toast.error(err?.response?.data?.message || "Operation Failed");
     }
   };
 
@@ -299,42 +329,84 @@ export const ChitCustomer = () => {
   // ================= CLOSE MODAL =================
   const closeModal = () => {
     setShowModal(false);
+    setErrors({});
+    setFormData(initialValue);
+    setPreview(null);
+    dispatch(setExsistingUser(null)); // 🔥 IMPORTANT
+
+    setFiles({
+      photoFile: null,
+      idProofFile: null,
+      addressProofFile: null,
+    });
   };
+
+  const handleDelete = async (id) => {
+    try {
+      if (!window.confirm("Delete this customer?")) return;
+      await api.delete(`/customer-id/${id}`);
+
+      dispatch(deleteUser(id)); // ✅ correct
+      toast.success("Customer Deleted Successfully");
+
+      loadData(); // optional (you already updated state)
+    } catch (err) {
+      console.log("DELETE ERROR FULL:", err.response);
+      toast.error(err.response?.data?.message || err.message);
+    }
+  };
+
+  const handleUpdate = (user) => {
+    // ✅ store in redux (optional but good)
+    dispatch(setExsistingUser(user));
+
+    // ✅ open modal
+    setShowModal(true);
+
+    // ✅ preview image (if backend gives URL)
+    if (user.photoFile) {
+      const fixedPath = user.photoFile.replace(/\\/g, "/");
+      setPreview(`${BASE_URL}/${fixedPath}`);
+    } else {
+      setPreview(null);
+    }
+  };
+
+  useEffect(() => {
+    if (exsistingUser) {
+      setFormData({
+        customerEmail: exsistingUser.customerEmail || "",
+        customerName: exsistingUser.customerName || "",
+        customerPhone: exsistingUser.customerPhone || "",
+        district: exsistingUser.district || "",
+        doorNumber: exsistingUser.doorNumber || "",
+        pincode: exsistingUser.pincode || "",
+        place: exsistingUser.place || "",
+        state: exsistingUser.state || "",
+        address: exsistingUser.address || "",
+        aadharNumber: exsistingUser.aadharNumber || "",
+        panNumber: exsistingUser.panNumber || "",
+        idProofNumber: exsistingUser.idProofNumber || "",
+        idProofType: exsistingUser.idProofType || "",
+        addressProofType: exsistingUser.addressProofType || "",
+      });
+
+      setPreview(exsistingUser.photoFile ? `${BASE_URL}/${exsistingUser.photoFile.replace(/\\/g, "/")}` : null);
+
+      setExistingFiles({
+        idProofFile: exsistingUser.idProofFile || null,
+        addressProofFile: exsistingUser.addressProofFile || null,
+      });
+    }
+  }, [exsistingUser]);
+
   return (
     <>
-      <div className="filter-wrapper d-flex gap-2 align-items-center mb-3">
-        <div className="filter-header">
-          <i className="bi bi-funnel-fill"></i>&nbsp; Filters :
-        </div>
-        <div className="search-item">
-          <div className="search-box ">
-            <input className="search-input" placeholder="Search By Name or ID..." type="text" value="" />
-            <i className="bi bi-search search-icon"></i>
-          </div>
-        </div>
-        <div className="flex-fill">
-          <select name="" id="" className="form-select">
-            <option value="">ALL</option>
-            <option value="WAITING">UPCOMING</option>
-            <option value="ACTIVE">ACTIVE</option>
-            <option value="CLOSED">CLOSED</option>
-          </select>
-        </div>
-        <div className="flex-fill">
-          <div className="d-flex align-items-center justify-content-md-end gap-2  filter-calender flex-wrap ">
-            <div className="d-flex align-items-center gap-2">
-              <label>
-                From <span className="d-none d-md-inline-block">Date</span> :
-              </label>
-              <input className="form-control" type="date" value="" />
-            </div>
-            <div className="d-flex align-items-center gap-2">
-              <label>
-                To <span className="d-none d-md-inline-block">Date</span> :
-              </label>
-              <input className="form-control" type="date" value="" />
-            </div>
-          </div>
+      {/* ── Header ── */}
+      <div className="wrapper_header">
+        <div>
+          <h5 className="header_title">Chit Customers</h5>
+          <p className="header_text">Handle customer details, KYC, and chit fund participation in one place.</p>
         </div>
       </div>
       <div className="wrapper-table-outer mt-4">
@@ -342,7 +414,23 @@ export const ChitCustomer = () => {
           <h6>
             <i className="fi fi-rs-users me-2"></i>Members List
           </h6>
-          <div>
+
+          <div className="d-flex align-items-center gap-3">
+            <div className="search-item">
+              <div className="search-box ">
+                <input
+                  className="search-input"
+                  placeholder="Search By Name or ID..."
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1); // reset page on search
+                  }}
+                />
+                <i className="bi bi-search search-icon"></i>
+              </div>
+            </div>
             <button className="btn main-btn" onClick={openModal}>
               <i className="bi bi-plus"></i> Add Customer
             </button>
@@ -364,36 +452,36 @@ export const ChitCustomer = () => {
           </thead>
 
           <tbody>
-            {activityData.map((item, index) => (
-              <tr key={index}>
+            {filteredData.map((item, index) => (
+              <tr key={item.id}>
                 <td className="customer_cell">
                   <span className="name_badge" style={{ background: getColor(index) }}>
-                    {getInitials(item.name)}
+                    {getInitials(item.customerName)}
                   </span>
-                  {item.name}
+                  {item.customerName}
                 </td>
 
-                <td>{item.phone}</td>
+                <td>{item.customerPhone}</td>
 
-                <td>{item.aadhar}</td>
+                <td>{item.aadharNumber}</td>
 
-                <td>{item.pan}</td>
+                <td>{item.panNumber}</td>
                 <td>{item.address}</td>
 
                 <td>
                   <small
-                    className={`py-1 px-2 rounded-pill ${item.kycStatus === "Verified" ? "bg-success-subtle text-success" : item.kycStatus === "Rejected" ? "bg-danger-subtle text-danger" : "bg-warning-subtle text-warning"}`}>
+                    className={`py-1 px-2 rounded-pill  ${item.kycStatus === "VERIFIED" ? "bg-success-subtle text-success" : item.kycStatus === "PENDING" ? "bg-warning-subtle text-warning" : "bg-warning-subtle text-warning"}`} style={{fontSize:"10px"}}>
                     {item.kycStatus || "Pending"}
                   </small>
                 </td>
                 <td class="d-flex">
-                  <Link to="/chit-customers/chit-customers-detail">
+                  <Link to={`/chit-customers/chit-customers-detail/${item.id}`}>
                     <i class="bi btn btn-sm bg-primary-subtle text-primary border border-primary-subtle me-2 bi-box-arrow-in-up-right"></i>
                   </Link>
-                  <button class="btn btn-sm bg-warning-subtle text-warning me-2 border border-warning-subtle">
+                  <button onClick={() => handleUpdate(item)} class="btn btn-sm bg-warning-subtle text-warning me-2 border border-warning-subtle">
                     <i class="bi bi-pencil"></i>
                   </button>
-                  <button class="btn btn-sm bg-danger-subtle text-danger border border-danger-subtle">
+                  <button onClick={() => handleDelete(item.id)} class="btn btn-sm bg-danger-subtle text-danger border border-danger-subtle">
                     <i class="bi bi-trash"></i>
                   </button>
                 </td>
@@ -404,20 +492,36 @@ export const ChitCustomer = () => {
           <tfoot className="table-footer">
             <tr>
               <td colSpan={4}>
-                <div className="entry-count">Showing 1 to 10 of 60 entries</div>
+                <div className="entry-count">
+                  Showing {totalRecords === 0 ? 0 : startIndex + 1} to {Math.min(endIndex, totalRecords)} of {totalRecords} entries
+                </div>
               </td>
+
               <td colSpan={4}>
                 <div className="pagination">
-                  <span className="page-btn">«</span>
+                  {/* PREV */}
+                  <span className={`page-btn ${currentPage === 1 ? "disabled" : ""}`} onClick={() => goToPage(currentPage - 1)}>
+                    «
+                  </span>
 
-                  <span className="page-number active">1</span>
-                  <span className="page-number">2</span>
-                  <span className="page-number">3</span>
-                  <span className="page-number">4</span>
-                  <span className="page-number">5</span>
-                  <span className="page-number">6</span>
+                  {/* PAGE NUMBERS */}
+                  {[...Array(totalPages)].map((_, i) => {
+                    const pageNumber = totalPages - i;
 
-                  <span className="page-btn">»</span>
+                    return (
+                      <span
+                        key={pageNumber}
+                        className={`page-number ${currentPage === pageNumber ? "active" : ""}`}
+                        onClick={() => goToPage(pageNumber)}>
+                        {pageNumber}
+                      </span>
+                    );
+                  })}
+
+                  {/* NEXT */}
+                  <span className={`page-btn ${currentPage === totalPages ? "disabled" : ""}`} onClick={() => goToPage(currentPage + 1)}>
+                    »
+                  </span>
                 </div>
               </td>
             </tr>
@@ -434,7 +538,7 @@ export const ChitCustomer = () => {
             <div className="modal-dialog modal_form modal-dialog-centered modal-lg">
               <div className="modal-content">
                 <div className="modal-header form_title ">
-                  <h1 className="title ">Add Customer</h1>
+                  <h1 className="title ">{exsistingUser ? "Update Customer" : "Add Customer"}</h1>
                   <button type="button" className="btn-close btn-sm" onClick={closeModal}></button>
                 </div>
                 <div className="modal-body form_content">
@@ -478,7 +582,7 @@ export const ChitCustomer = () => {
                           onChange={handleInput}
                           name="customerName"
                         />
-                        <small className="text-danger"></small>
+                        {errors.customerName && <small className="text-danger">{errors.customerName}</small>}
                       </div>
                       <div className="col-lg-4">
                         <label for="" className="form-label">
@@ -492,7 +596,7 @@ export const ChitCustomer = () => {
                           onChange={handleInput}
                           name="customerPhone"
                         />
-                        <small className="text-danger"></small>
+                        {errors.customerPhone && <small className="text-danger">{errors.customerPhone}</small>}
                       </div>
                       <div className="col-lg-4">
                         <label for="" className="form-label">
@@ -506,28 +610,26 @@ export const ChitCustomer = () => {
                           onChange={handleInput}
                           name="customerEmail"
                         />
-                        <small className="text-danger"></small>
+                        <small className="text-danger">{errors.customerEmail}</small>
                       </div>
                       <div className="col-lg-4">
                         <label for="" className="form-label">
                           Place
                         </label>
                         <input className="form-control" placeholder="Place" type="text" value={formData.place} onChange={handleInput} name="place" />
-                        <small className="text-danger"></small>
                       </div>
                       <div className="col-lg-4">
                         <label for="" className="form-label">
                           Aadhar Number
                         </label>
                         <input
-                          maxlength="12"
                           className="form-control"
                           placeholder="Aadhar Number"
                           value={formData.aadharNumber}
                           onChange={handleInput}
                           name="aadharNumber"
                         />
-                        <small className="text-danger"></small>
+                        <small className="text-danger">{errors.aadharNumber}</small>
                       </div>
                       <div className="col-lg-4">
                         <label for="" className="form-label">
@@ -541,7 +643,7 @@ export const ChitCustomer = () => {
                           value={formData.panNumber}
                           name="panNumber"
                         />
-                        <small className="text-danger"></small>
+                        <small className="text-danger">{errors.panNumber}</small>
                       </div>
                       <div className="col-lg-2">
                         <label for="" className="form-label">
@@ -555,7 +657,6 @@ export const ChitCustomer = () => {
                           value={formData.doorNumber}
                           name="doorNumber"
                         />
-                        <small className="text-danger"></small>
                       </div>
 
                       <div className="col-lg-4">
@@ -563,7 +664,6 @@ export const ChitCustomer = () => {
                           State
                         </label>
                         <input className="form-control" placeholder="State" type="text" onChange={handleInput} value={formData.state} name="state" />
-                        <small className="text-danger"></small>
                       </div>
                       <div className="col-lg-4">
                         <label for="" className="form-label">
@@ -577,7 +677,6 @@ export const ChitCustomer = () => {
                           value={formData.district}
                           name="district"
                         />
-                        <small className="text-danger"></small>
                       </div>
                       <div className="col-lg-2">
                         <label for="" className="form-label">
@@ -591,7 +690,7 @@ export const ChitCustomer = () => {
                           value={formData.pincode}
                           name="pincode"
                         />
-                        <small className="text-danger"></small>
+                        <small className="text-danger">{errors.pincode}</small>
                       </div>
                       <div className="col-lg-12">
                         <label for="" className="form-label">
@@ -605,7 +704,6 @@ export const ChitCustomer = () => {
                           value={formData.address}
                           placeholder="Address"
                           rows="2"></textarea>
-                        <small className="text-danger"></small>
                       </div>
                       {/* ================= KYC DETAILS ================= */}
                       <div className="col-12">
@@ -632,12 +730,24 @@ export const ChitCustomer = () => {
                           value={formData.idProofNumber}
                           onChange={handleInput}
                           name="idProofNumber"
+                          disabled={!formData.idProofType}
                         />
+                        <small className="text-danger">{errors.idProofNumber}</small>
                       </div>
 
                       <div className="col-lg-4">
                         <label className="form-label">Upload ID Proof</label>
-                        <input type="file" className="form-control" name="idProofFile" accept="image/*,application/pdf" onChange={handleFileChange} />
+                        <input
+                          type="file"
+                          className="form-control"
+                          name="idProofFile"
+                          accept="image/*,application/pdf"
+                          onChange={handleFileChange}
+                          disabled={!formData.idProofType}
+                        />
+                        {existingFiles.idProofFile?.match(/\.(jpg|jpeg|png)$/i) && (
+                          <img src={`${BASE_URL}/${existingFiles.idProofFile.replace(/\\/g, "/")}`} width="60" className="mt-1" alt="ID Proof" />
+                        )}
                       </div>
 
                       <div className="col-lg-4">
@@ -658,7 +768,11 @@ export const ChitCustomer = () => {
                           name="addressProofFile"
                           accept="image/*,application/pdf"
                           onChange={handleFileChange}
+                          disabled={!formData.addressProofType}
                         />
+                        {existingFiles.addressProofFile?.match(/\.(jpg|jpeg|png)$/i) && (
+                          <img src={`${BASE_URL}/${existingFiles.addressProofFile.replace(/\\/g, "/")}`} width="60" className="mt-1" alt="ID Proof" />
+                        )}
                       </div>
 
                       {/* BUTTON */}
@@ -667,7 +781,7 @@ export const ChitCustomer = () => {
                           Cancel
                         </button>
                         <button type="submit" className="btn main-btn">
-                          Add Customer
+                          {exsistingUser ? "Update Customer" : "Add Customer"}
                         </button>
                       </div>
                     </div>

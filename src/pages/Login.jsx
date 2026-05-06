@@ -15,6 +15,7 @@ export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const loading = useSelector((state) => state.userAuth.loading);
+  const errs = useSelector((state) => state.userAuth.error);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -27,14 +28,12 @@ export const Login = () => {
     try {
       const res = await api.post("/auth/login", { login, password });
       dispatch(loginUser(res.data));
-      toast.success("Login Successfully");
       navigate("/dashboard");
       setLogin("");
       setPassword("");
     } catch (error) {
       const err = error?.response?.data?.message || error.message || "Login Failed";
       dispatch(setErrors(err));
-      toast.error(err);
     }
   };
 
@@ -111,7 +110,7 @@ export const Login = () => {
               </button>
             </div>
           </div>
-
+          {errs && <small className="text-danger">{errs}</small>}
           <button type="submit" className="space-submit-btn">
             <span>{loading ? "Signing" : "Sign in to Dashboard"}</span>
           </button>

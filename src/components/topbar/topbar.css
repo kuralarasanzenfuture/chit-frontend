@@ -96,11 +96,15 @@
   background-color: rgba(26, 115, 232, 0.08);
 }
 
-.profile-pic {
-  width: 40x;
-  height: 40px;
+.profile_avatar{
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   object-fit: cover;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile-info {
@@ -200,7 +204,7 @@
 }
 
 .profile-role {
-  font-size: 12px;
+  font-size: 10px;
   color: #6b7280;
 }
 
@@ -256,9 +260,11 @@
 .profile-bg p {
   font-weight: 500;
   margin-bottom: 0px;
+  color: #000;
 }
 .profile-bg small {
-  font-size: 13px;
+  font-size: 11px;
+  color: #444;
 }
 
 .search-group {

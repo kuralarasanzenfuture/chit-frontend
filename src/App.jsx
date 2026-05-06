@@ -28,6 +28,7 @@ import { Login } from "./pages/Login";
 import { ProtectedRoutes } from "./routes/ProtectedRoutes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { CreateCompanyDetails } from "./components/settings/Createcompanydetails";
 
 export const DashboardLayout = ({ collapsed, setCollapsed }) => {
   return (
@@ -53,7 +54,8 @@ export const DashboardLayout = ({ collapsed, setCollapsed }) => {
               <Route path="/chit-payments/daily-collection" element={<DailyCollection />} />
               <Route path="/chit-payments/pending-reminders" element={<PendingReminders />} />
               <Route path="/notifications" element={<Notifications />} />
-              <Route path="/settings" element={<ProfileEdit />} />
+              <Route path="/edit-profile" element={<ProfileEdit />} />
+              <Route path="/settings" element={<CreateCompanyDetails />} />
               <Route path="/report/collection-report" element={<CollectionReport />} />
               <Route path="/report/group-report" element={<GroupReport />} />
               <Route path="/gst" element={<GSTDashboard />} />
