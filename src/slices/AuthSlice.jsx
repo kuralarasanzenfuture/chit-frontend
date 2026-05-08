@@ -33,24 +33,64 @@ export const AuthSlice = createSlice({
   initialState,
   reducers: {
     /* ===== LOGIN SUCCESS ===== */
+    // loginUser: (state, action) => {
+    //   const data = action.payload;
+
+    //   const accessToken = data.accessToken;
+    //   const refreshToken = data.refreshToken;
+
+    //   // ✅ Decode user info from token
+    //   const decodedUser = parseJwt(accessToken);
+
+    //   state.user = decodedUser;
+    //   state.loading = false;
+    //   state.error = null;
+
+    //   // ✅ Store in localStorage
+    //   localStorage.setItem("token", accessToken);
+    //   localStorage.setItem("refreshToken", refreshToken);
+    //   localStorage.setItem("user", JSON.stringify(decodedUser));
+    // },
+
     loginUser: (state, action) => {
-      const data = action.payload;
+  const data = action.payload;
 
-      const accessToken = data.accessToken;
-      const refreshToken = data.refreshToken;
+  const accessToken = data.accessToken;
+  const refreshToken = data.refreshToken;
 
-      // ✅ Decode user info from token
-      const decodedUser = parseJwt(accessToken);
+  // ✅ Decode tokens
+  const decodedUser = parseJwt(accessToken);
+  const decodedRefresh = parseJwt(refreshToken);
 
-      state.user = decodedUser;
-      state.loading = false;
-      state.error = null;
+  state.user = decodedUser;
+  state.loading = false;
+  state.error = null;
 
-      // ✅ Store in localStorage
-      localStorage.setItem("token", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("user", JSON.stringify(decodedUser));
-    },
+  // ✅ Store in localStorage
+  localStorage.setItem("token", accessToken);
+  localStorage.setItem("refreshToken", refreshToken);
+  localStorage.setItem("user", JSON.stringify(decodedUser));
+
+  /* ================= DEBUG ================= */
+  // console.log("access token", accessToken);
+  // console.log("refresh token", refreshToken);
+  // console.log("🔑 User:", decodedUser);
+
+  // ✅ Access token expiry
+  console.log("🕒 Access Exp:", new Date(decodedUser?.exp * 1000));
+
+  // ✅ Refresh token expiry
+  // if (decodedRefresh?.exp) {
+  //   console.log("🔄 Refresh Exp:", new Date(decodedRefresh.exp * 1000));
+  // } else {
+  //   console.warn("⚠️ Refresh token has NO exp field");
+  // }
+
+  // console.log(
+  //   "⏳ Time left (sec):",
+  //   decodedUser?.exp - Math.floor(Date.now() / 1000)
+  // );
+},
 
     /* ===== LOADING ===== */
     setLoading: (state) => {
